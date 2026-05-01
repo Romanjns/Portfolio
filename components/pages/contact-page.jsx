@@ -1,3 +1,9 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { PALETTE, useViewport, SectionPattern } from '../shared/hero-shared.jsx';
+import { PageShell } from '../shared/shared-chrome.jsx';
+import { useTweaks } from '../shared/use-tweaks.jsx';
+
 // Contact page
 function ContactPage() {
   const { tw, setTw } = useTweaks();
@@ -249,8 +255,4 @@ function ContactPage() {
   );
 }
 
-function scramble(text) {
-  return text.split('').map(c => c === ' ' ? ' ' : randChar()).join('');
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<ContactPage />);
+createRoot(document.getElementById('root')).render(<ContactPage />);

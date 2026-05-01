@@ -1,3 +1,7 @@
+import React from 'react';
+import { createPortal } from 'react-dom';
+import { PALETTE, useViewport, SectionPattern, sectionSurface } from './hero-shared.jsx';
+
 // Landing-page sections (below hero): Skills, Featured Projects, Certifications, Experience.
 // Each section is a standalone component used on index.html.
 
@@ -156,7 +160,7 @@ function SkillTooltip({ skill, x, y, dark, accent }) {
       )}
     </div>
   );
-  return ReactDOM.createPortal(el, document.body);
+  return createPortal(el, document.body);
 }
 
 function SkillChip({ skill, accent, dark, onEnter, onLeave }) {
@@ -1135,4 +1139,4 @@ function Experience({ tw }) {
   );
 }
 
-Object.assign(window, { SectionHeader, SkillsGrid, SkillsMarquee, FeaturedProjects, Certifications, CertBadge, CertCard, CertBadgeIcon, Experience, PROJECTS, SKILL_GROUPS, SKILLS_ALL, SKILL_CATS, CERTS, CERT_COLORS, EXPERIENCE, ProjectCard });
+export { SectionHeader, SkillsGrid, SkillsMarquee, FeaturedProjects, Certifications, CertBadge, CertCard, CertBadgeIcon, Experience, PROJECTS, SKILL_GROUPS, SKILLS_ALL, SKILL_CATS, CERTS, CERT_COLORS, EXPERIENCE, ProjectCard };

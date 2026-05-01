@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Shared pieces: Matrix rain canvas, name with swappable type-effects,
 // palette tokens. Everything receives `tw` (the live tweak values) so both
 // variations update together.
@@ -197,57 +199,62 @@ function MatrixRain({ color = PALETTE.blue, opacity = 0.55, density = 1, dark = 
 
 // ── Mesh / gradient background ───────────────────────────────
 // Interactive: orbs drift slowly, plus parallax-follow the cursor.
+// Static animation config lives outside the component so the rAF loop
+// closes over a stable reference — no React re-renders on each frame.
+const MESH_ORB_ANIM = [
+  { px: 8,  py: 6,  sx: 0.35, sy: 0.28, ph: 0 },
+  { px: 14, py: 10, sx: 0.27, sy: 0.32, ph: 0 },
+  { px: 20, py: 14, sx: 0.22, sy: 0.24, ph: 1 },
+];
+
 function MeshBG({ accent, dark }) {
   const base = dark ? PALETTE.indigo : PALETTE.white;
-  const ref = React.useRef(null);
-  const [tick, setTick] = React.useState(0);
+  const containerRef = React.useRef(null);
+  const orbRefs = React.useRef([]);
   const pos = React.useRef({ x: 0, y: 0, tx: 0, ty: 0 });
 
   React.useEffect(() => {
-    const el = ref.current;
+    const el = containerRef.current;
     if (!el) return;
     const onMove = (e) => {
       const r = el.getBoundingClientRect();
-      const nx = ((e.clientX - r.left) / r.width  - 0.5) * 2;  // -1..1
-      const ny = ((e.clientY - r.top)  / r.height - 0.5) * 2;
-      pos.current.tx = nx;
-      pos.current.ty = ny;
+      pos.current.tx = ((e.clientX - r.left) / r.width  - 0.5) * 2;
+      pos.current.ty = ((e.clientY - r.top)  / r.height - 0.5) * 2;
     };
-    window.addEventListener('pointermove', onMove);
-    let raf = 0, t0 = performance.now();
+    window.addEventListener('pointermove', onMove, { passive: true });
+    let raf = 0;
+    const t0 = performance.now();
     const loop = (now) => {
-      // ease current toward target
+      const t = (now - t0) * 0.001;
       pos.current.x += (pos.current.tx - pos.current.x) * 0.06;
       pos.current.y += (pos.current.ty - pos.current.y) * 0.06;
-      setTick(now - t0);
+      MESH_ORB_ANIM.forEach((o, i) => {
+        const orbEl = orbRefs.current[i];
+        if (!orbEl) return;
+        const dx = Math.sin(t * o.sx + o.ph) * 6;
+        const dy = Math.cos(t * o.sy + o.ph) * 5;
+        orbEl.style.transform = `translate(calc(${dx + pos.current.x * o.px}%), calc(${dy + pos.current.y * o.py}%))`;
+      });
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => { cancelAnimationFrame(raf); window.removeEventListener('pointermove', onMove); };
   }, []);
 
-  const t = tick * 0.001;
-  const { x, y } = pos.current;
-
-  // Three orbs — each drifts with sin/cos at different rates, and parallaxes
-  // toward the cursor at different strengths for layered depth.
   const orbs = [
-    { hue: accent,         size: 620, bx: 18, by: 25, dx: Math.sin(t*0.35)*6,  dy: Math.cos(t*0.28)*5,  px: 8,  py: 6,
-      a: dark ? 0.75 : 0.55 },
-    { hue: PALETTE.blueDk, size: 540, bx: 82, by: 72, dx: Math.cos(t*0.27)*7,  dy: Math.sin(t*0.32)*6,  px: 14, py: 10,
-      a: dark ? 0.70 : 0.50 },
-    { hue: PALETTE.blueDk, size: 460, bx: 58, by: 12, dx: Math.sin(t*0.22+1)*5,dy: Math.cos(t*0.24+2)*4,px: 20, py: 14,
-      a: dark ? 0.60 : 0.38 },
+    { hue: accent,         size: 620, bx: 18, by: 25, a: dark ? 0.75 : 0.55 },
+    { hue: PALETTE.blueDk, size: 540, bx: 82, by: 72, a: dark ? 0.70 : 0.50 },
+    { hue: PALETTE.blueDk, size: 460, bx: 58, by: 12, a: dark ? 0.60 : 0.38 },
   ];
 
   return (
-    <div ref={ref} style={{ position:'absolute', inset:0, background: base, overflow:'hidden' }}>
+    <div ref={containerRef} style={{ position:'absolute', inset:0, background: base, overflow:'hidden' }}>
       {orbs.map((o, i) => (
-        <div key={i} style={{
+        <div key={i} ref={el => { orbRefs.current[i] = el; }} style={{
           position:'absolute',
           width: o.size, height: o.size,
-          left: `calc(${o.bx}% - ${o.size/2}px + ${o.dx + x * o.px}%)`,
-          top:  `calc(${o.by}% - ${o.size/2}px + ${o.dy + y * o.py}%)`,
+          left: `calc(${o.bx}% - ${o.size/2}px)`,
+          top:  `calc(${o.by}% - ${o.size/2}px)`,
           borderRadius:'50%',
           background: `radial-gradient(circle, ${o.hue} 0%, transparent 62%)`,
           filter:'blur(48px)',
@@ -256,7 +263,6 @@ function MeshBG({ accent, dark }) {
           willChange:'transform',
         }}/>
       ))}
-      {/* subtle grain for texture in dark mode */}
       {dark && <div style={{
         position:'absolute', inset:0, opacity: 0.25, mixBlendMode:'overlay',
         backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E\")",
@@ -442,4 +448,4 @@ if (typeof document !== 'undefined' && !document.getElementById('rj-keyframes'))
   document.head.appendChild(s);
 }
 
-Object.assign(window, { PALETTE, useViewport, useScrollReveal, SectionPattern, sectionSurface, MatrixRain, Background, BigName });
+export { PALETTE, MESH_ORB_ANIM, useViewport, useScrollReveal, SectionPattern, sectionSurface, MatrixRain, Background, BigName };

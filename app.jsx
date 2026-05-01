@@ -1,3 +1,10 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { useTweaks } from './components/shared/use-tweaks.jsx';
+import { PageShell } from './components/shared/shared-chrome.jsx';
+import { HeroSection } from './components/shared/hero-terminal.jsx';
+import { SkillsGrid, FeaturedProjects, Certifications } from './components/shared/landing-sections.jsx';
+
 // index.html landing page — hero + skills + featured projects + certs
 function LandingPage() {
   const { tw, setTw } = useTweaks();
@@ -11,4 +18,4 @@ function LandingPage() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<LandingPage />);
+createRoot(document.getElementById('root')).render(<LandingPage />);

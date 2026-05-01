@@ -1,4 +1,13 @@
-  const CV_FILE = 'Roman-Janssens-CV.pdf';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import * as d3 from 'd3';
+import * as topo from 'topojson-client';
+import { PALETTE, useViewport, sectionSurface, SectionPattern } from '../shared/hero-shared.jsx';
+import { PageShell } from '../shared/shared-chrome.jsx';
+import { useTweaks } from '../shared/use-tweaks.jsx';
+import { SectionHeader, Experience } from '../shared/landing-sections.jsx';
+
+const CV_FILE = 'assets/files/cv.pdf';
 
 function CVSection({ tw }) {
   const { isMobile, isTablet } = useViewport();
@@ -181,9 +190,7 @@ function GlobeVisual({ accent, dark }) {
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
-    const d3   = window.d3;
-    const topo = window.topojson;
-    if (!canvas || !d3 || !topo) return;
+    if (!canvas) return;
 
     const W = 280, H = 280;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -581,4 +588,4 @@ function AboutPage() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<AboutPage />);
+createRoot(document.getElementById('root')).render(<AboutPage />);

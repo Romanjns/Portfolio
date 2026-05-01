@@ -1,3 +1,6 @@
+import React from 'react';
+import { PALETTE, useViewport, Background, useScrollReveal } from './hero-shared.jsx';
+
 // Shared Nav + Footer used across every page.
 
 function Nav({ current, dark, accent, onToggleDark }) {
@@ -330,4 +333,4 @@ function PageShell({ current, children, tw, setTw }) {
   );
 }
 
-Object.assign(window, { Nav, Footer, PageShell, saveNavLine });
+export { Nav, Footer, PageShell, saveNavLine };

@@ -1,3 +1,9 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { PALETTE, useViewport } from '../shared/hero-shared.jsx';
+import { PageShell } from '../shared/shared-chrome.jsx';
+import { useTweaks } from '../shared/use-tweaks.jsx';
+
 // Extended project data with details for carousel
 const PROJECTS_DETAILED = [
   {
@@ -639,4 +645,4 @@ function ProjectsPage() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<ProjectsPage />);
+createRoot(document.getElementById('root')).render(<ProjectsPage />);

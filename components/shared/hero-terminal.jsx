@@ -1,3 +1,6 @@
+import React from 'react';
+import { PALETTE, useViewport, SectionPattern, sectionSurface, BigName } from './hero-shared.jsx';
+
 // Hero section — terminal focus, name near-left with breathing room.
 // Nav + footer come from shared-chrome; this is just the hero block.
 
@@ -435,4 +438,4 @@ function HeroSection({ tw }) {
   );
 }
 
-Object.assign(window, { HeroSection, Terminal, FocusCard, FocusPanel });
+export { HeroSection, Terminal, FocusCard, FocusPanel };

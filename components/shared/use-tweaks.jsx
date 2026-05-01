@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Shared state + tweaks hook used by every page.
 // Persists settings in localStorage so theme flows between pages.
 
@@ -48,4 +50,4 @@ function useTweaks() {
   return { tw, setTw };
 }
 
-Object.assign(window, { useTweaks, RJ_DEFAULTS, loadTw, saveTw });
+export { useTweaks, RJ_DEFAULTS, loadTw, saveTw };
