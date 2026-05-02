@@ -95,10 +95,10 @@ function ContactPage() {
   };
 
   return (
-    <PageShell current="contact" tw={tw} setTw={setTw}>
+    <PageShell current="contact" tw={tw} setTw={setTw} headerOverlay={true}>
       <section style={{
         position:'relative', overflow:'hidden',
-        padding: isMobile ? '36px 5vw 64px' : isTablet ? '48px 5vw 72px' : '40px 6vw 80px',
+        padding: isMobile ? '84px 5vw 84px' : isTablet ? '80px 5vw 80px' : '78px 6vw 78px',
         maxWidth: 1400, margin:'0 auto',
       }}>
         <SectionPattern dark={dark} accent={accent} variant="hero" opacity={isMobile ? 0.32 : 0.44} />
@@ -112,9 +112,9 @@ function ContactPage() {
 
           <h1 className="rj-fadeup" style={{
             fontFamily:'"Space Grotesk", sans-serif',
-            fontSize: isMobile ? 44 : isTablet ? 72 : 96,
-            fontWeight: 700, lineHeight: 1.0,
-            color: fg, margin:'0 0 56px', maxWidth: 1100,
+            fontSize: isMobile ? 38 : isTablet ? 60 : 72,
+            fontWeight: 700, lineHeight: 1.05,
+            color: fg, margin:'0 0 40px', maxWidth: 1100,
             animationDelay:'0.1s',
           }}>
             Let's build<br/>something secure.
@@ -123,7 +123,7 @@ function ContactPage() {
           <div style={{
             display:'grid',
             gridTemplateColumns: isMobile || isTablet ? '1fr' : '1fr 1.2fr',
-            gap: isMobile ? 28 : 40,
+            gap: isMobile ? 24 : 32,
             alignItems: isMobile || isTablet ? 'start' : 'stretch',
           }}>
 
@@ -131,7 +131,7 @@ function ContactPage() {
             <div className="rj-fadeup" style={{ animationDelay:'0.25s', display:'flex', flexDirection:'column', gap: 14 }}>
               {/* Combined email + socials card */}
               <div style={{
-                padding: isMobile ? '28px 24px' : '32px',
+                padding: isMobile ? '24px 20px' : '28px',
                 borderRadius: 16,
                 border: `1px solid ${border}`,
                 background: cardBg,
@@ -224,11 +224,11 @@ function ContactPage() {
                   style={{ border: 0, display:'block', filter: dark ? 'invert(90%) hue-rotate(180deg) brightness(0.88) contrast(0.9)' : 'none' }}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src="https://maps.google.com/maps?q=Smissestraat+33,+Vorst,+Laakdal,+Belgium&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=Vorst,+Laakdal,+Belgium&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 />
                 {/* Location label overlay */}
                 <div style={{
-                  position:'absolute', bottom: 14, left: 14,
+                  position:'absolute', bottom: 14, left: 64,
                   padding:'8px 14px', borderRadius: 8,
                   background: dark ? 'rgba(31,34,36,0.92)' : 'rgba(248,252,253,0.92)',
                   backdropFilter:'blur(10px)',
@@ -242,7 +242,7 @@ function ContactPage() {
                   <span style={{
                     fontFamily:'"JetBrains Mono", monospace',
                     fontSize: 11, fontWeight: 600, color: fg, letterSpacing: 0.3,
-                  }}>Smissestraat 33, Vorst · Laakdal, BE</span>
+                  }}>Vorst · Laakdal, BE</span>
                 </div>
               </div>
             </div>

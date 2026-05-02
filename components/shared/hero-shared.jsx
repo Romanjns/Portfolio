@@ -90,7 +90,6 @@ function sectionSurface(dark, strength = 1) {
     background: dark
       ? `rgba(31,34,36,${0.48 * strength})`
       : `rgba(248,252,253,${0.66 * strength})`,
-    borderTop: `1px solid ${dark ? 'rgba(248,252,253,0.08)' : 'rgba(31,34,36,0.08)'}`,
     backdropFilter:'blur(10px) saturate(120%)',
     WebkitBackdropFilter:'blur(10px) saturate(120%)',
   };
@@ -388,8 +387,8 @@ function BigName({ text, effect = 'decrypt', accent, dark, seed = 0, startDelay 
   }
   // decrypt / typewriter / default
   return (
-    <h1 style={base}>
-      <span>{display}</span>
+    <h1 style={{...base, minHeight: base.lineHeight ? `${base.lineHeight}em` : 'auto' }}>
+      <span style={{ display: 'inline-block', minWidth: 0 }}>{display}</span>
       {effect === 'typewriter' && phase === 0 && !pending && (
         <span style={{ display:'inline-block', width:'0.12em', height:'0.9em',
           background: accent, marginLeft:4, verticalAlign:'-0.05em',
@@ -412,6 +411,7 @@ if (typeof document !== 'undefined' && !document.getElementById('rj-keyframes'))
   const s = document.createElement('style');
   s.id = 'rj-keyframes';
   s.textContent = `
+    html { scrollbar-gutter: stable; }
     @keyframes rjStagger { to { opacity:1; transform:translateY(0); } }
     @keyframes rjShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     @keyframes rjOutline { 0% { color: transparent; } 100% { color: inherit; } }

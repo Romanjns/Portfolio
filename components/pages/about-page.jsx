@@ -23,10 +23,9 @@ function CVSection({ tw }) {
       position:'relative',
       overflow:'hidden',
       padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '92px 6vw',
-      maxWidth: 1400,
-      margin:'0 auto',
       ...sectionSurface(dark, 0.48),
     }}>
+      <div style={{ maxWidth: 1400, margin:'0 auto' }}>
       <SectionPattern dark={dark} accent={accent} variant="grid" opacity={0.28} />
       <div data-rj-reveal style={{
         position:'relative',
@@ -46,10 +45,9 @@ function CVSection({ tw }) {
         }}>
           <div style={{
             borderRadius: 8,
-            border: `1px solid ${border}`,
-            background: dark ? 'rgba(31,34,36,0.55)' : 'rgba(248,252,253,0.7)',
+            background: dark ? 'rgba(31,34,36,0.55)' : 'rgba(248,252,253,0.85)',
             padding: isMobile ? 18 : 24,
-            boxShadow: dark ? '0 24px 80px -28px rgba(0,0,0,0.75)' : '0 24px 80px -28px rgba(31,34,36,0.25)',
+            boxShadow: dark ? '0 24px 80px -28px rgba(0,0,0,0.55)' : '0 24px 80px -28px rgba(31,34,36,0.16)',
           }}>
             <div style={{
               aspectRatio:'0.72 / 1',
@@ -100,8 +98,8 @@ function CVSection({ tw }) {
                 {[0, 1, 2, 3].map(i => (
                   <div key={i} style={{
                     height: 42,
-                    border:`1px solid rgba(31,34,36,0.12)`,
                     borderRadius: 4,
+                    background: dark ? 'rgba(248,252,253,0.12)' : 'rgba(31,34,36,0.06)',
                   }}/>
                 ))}
               </div>
@@ -155,6 +153,7 @@ function CVSection({ tw }) {
           </div>
         </div>
       </div>
+    </div>
     </section>
   );
 }
@@ -357,10 +356,9 @@ function WhatsNext({ tw }) {
       position:'relative',
       overflow:'hidden',
       padding: isMobile ? '56px 5vw 80px' : isTablet ? '72px 5vw 92px' : '84px 6vw 110px',
-      maxWidth: 1400,
-      margin:'0 auto',
       ...sectionSurface(dark, 0.36),
     }}>
+      <div style={{ maxWidth: 1400, margin:'0 auto' }}>
       <SectionPattern dark={dark} accent={accent} variant="diagonal" opacity={0.30} />
       <div style={{ position:'relative', zIndex: 1 }}>
         <div data-rj-reveal>
@@ -380,10 +378,10 @@ function WhatsNext({ tw }) {
           gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           gap: isMobile ? 20 : 40,
           alignItems:'center',
-          border:`1px solid ${border}`,
           borderRadius: 12,
           padding: isMobile ? '28px 22px' : isTablet ? '32px' : '36px 44px',
           background: cardBg,
+          boxShadow: dark ? '0 18px 45px -28px rgba(0,0,0,0.45)' : '0 18px 45px -28px rgba(31,34,36,0.10)',
           marginBottom: 14,
           position:'relative',
           overflow:'hidden',
@@ -443,10 +441,10 @@ function WhatsNext({ tw }) {
           {items.map(([title, body], i) => (
             <div key={title} data-rj-reveal style={{
               '--rj-delay': `${150 + i * 70}ms`,
-              border:`1px solid ${border}`,
               borderRadius: 8,
               padding:'22px',
               background: cardBg,
+              boxShadow: dark ? '0 12px 32px -24px rgba(0,0,0,0.35)' : '0 12px 32px -24px rgba(31,34,36,0.08)',
             }}>
               <div style={{
                 fontFamily:'"JetBrains Mono", monospace',
@@ -467,6 +465,7 @@ function WhatsNext({ tw }) {
           ))}
         </div>
       </div>
+      </div>
     </section>
   );
 }
@@ -481,12 +480,11 @@ function AboutPage() {
   const border = dark ? 'rgba(248,252,253,0.10)' : 'rgba(31,34,36,0.12)';
 
   return (
-    <PageShell current="about" tw={tw} setTw={setTw}>
+    <PageShell current="about" tw={tw} setTw={setTw} headerOverlay={true}>
       <section style={{
         position:'relative',
         overflow:'hidden',
-        padding: isMobile ? '136px 5vw 40px' : isTablet ? '126px 5vw 44px' : '118px 6vw 36px',
-        marginTop: isMobile ? -100 : -78,
+        padding: isMobile ? '84px 5vw 40px' : isTablet ? '78px 5vw 44px' : '76px 6vw 36px',
         ...sectionSurface(dark, 0.52),
         borderTop:'none',
         borderBottom:'none',
@@ -502,9 +500,9 @@ function AboutPage() {
 
         <h1 className="rj-fadeup" style={{
           fontFamily:'"Space Grotesk", sans-serif',
-          fontSize: isMobile ? 42 : isTablet ? 60 : 70,
+          fontSize: isMobile ? 40 : isTablet ? 54 : 62,
           fontWeight: 700, letterSpacing: 0, lineHeight: 1.05,
-          color: fg, margin:'0 0 40px', maxWidth: 960,
+          color: fg, margin:'0 0 32px', maxWidth: 960,
           animationDelay:'0.1s',
         }}>
           Cloud, security,<br/>and the quiet joy<br/>of well-built systems.
@@ -513,9 +511,9 @@ function AboutPage() {
         <div style={{
           display:'grid',
           gridTemplateColumns: isMobile || isTablet ? '1fr' : '1.4fr 1fr',
-          gap: isMobile ? 32 : isTablet ? 48 : 80,
+          gap: isMobile ? 24 : isTablet ? 38 : 64,
           alignItems:'flex-start',
-          paddingTop: isMobile ? 16 : 40,
+          paddingTop: isMobile ? 16 : 32,
         }}>
           <div className="rj-fadeup" style={{ animationDelay:'0.3s' }}>
             {[
@@ -525,14 +523,14 @@ function AboutPage() {
               "Outside of school I write short post-mortems on my home lab breakages, mentor first-years through our CTF club, and am slowly working through the AWS SA Associate material.",
             ].map((p, i) => (
               <p key={i} style={{
-                fontSize: isMobile ? 15.5 : 17, lineHeight: 1.7, color: subtle,
-                margin:'0 0 22px', maxWidth: 640,
+                fontSize: isMobile ? 15 : 16, lineHeight: 1.65, color: subtle,
+                margin:'0 0 20px', maxWidth: 640,
               }}>{p}</p>
             ))}
           </div>
 
           <div className="rj-fadeup" style={{
-            padding: isMobile ? '24px 20px' : '28px 32px', borderRadius: 16,
+            padding: isMobile ? '22px 18px' : '24px 28px', borderRadius: 16,
             border: `1px solid ${border}`,
             background: dark ? 'rgba(248,252,253,0.04)' : 'rgba(248,252,253,0.6)',
             backdropFilter:'blur(14px)',
@@ -578,9 +576,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section style={{ padding: 0, maxWidth: 1600, margin:'0 auto' }}>
-        <Experience tw={tw} />
-      </section>
+      <Experience tw={tw} />
       <CVSection tw={tw} />
       <WhatsNext tw={tw} />
 

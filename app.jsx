@@ -9,7 +9,7 @@ import { SkillsGrid, FeaturedProjects, Certifications } from './components/share
 function LandingPage() {
   const { tw, setTw } = useTweaks();
   return (
-    <PageShell current="home" tw={tw} setTw={setTw}>
+    <PageShell current="home" tw={tw} setTw={setTw} headerOverlay={true}>
       <HeroSection tw={tw} />
       <SkillsGrid tw={tw} />
       <FeaturedProjects tw={tw} />

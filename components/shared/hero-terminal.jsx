@@ -359,19 +359,24 @@ function HeroSection({ tw }) {
     <section style={{
       position:'relative',
       overflow:'hidden',
+      overflowX:'hidden',
       ...sectionSurface(dark, 0.7),
-      borderTop:'none',
-      display:'grid',
-      gridTemplateColumns: showTerminal && !isMobile && !isTablet ? 'minmax(0, 1.02fr) minmax(460px, 0.98fr)' : '1fr',
-      gap: isMobile ? 36 : isTablet ? 48 : 72,
-      alignItems:'center', alignContent:'center',
-      padding: isMobile ? '136px 5vw 64px' : isTablet ? '126px 5vw 72px' : '118px 6vw 80px',
-      maxWidth: 1600, marginTop: isMobile ? -100 : -78, marginLeft: 'auto', marginRight: 'auto',
       minHeight: isMobile || isTablet ? 'auto' : '100vh',
+      display:'grid',
+      alignItems:'center',
+      padding: isMobile ? '88px 5vw' : isTablet ? '84px 5vw' : '84px 6vw',
     }}>
       <SectionPattern dark={dark} accent={accent} variant="hero" opacity={isMobile ? 0.42 : 0.62} />
-      {/* LEFT */}
-      <div style={{ position:'relative', zIndex: 1, minWidth: 0, paddingLeft: isMobile || isTablet ? 0 : '2vw' }}>
+      <div style={{
+        display:'grid',
+        gridTemplateColumns: showTerminal && !isMobile && !isTablet ? 'minmax(0, 1.02fr) minmax(460px, 0.98fr)' : '1fr',
+        gap: isMobile ? 36 : isTablet ? 48 : 72,
+        alignItems:'center', alignContent:'center',
+        padding: '0',
+        maxWidth: 1600, margin: '0 auto',
+      }}>
+        {/* LEFT */}
+        <div style={{ position:'relative', zIndex: 1, minWidth: 0, paddingLeft: isMobile || isTablet ? 0 : '2vw' }}>
         <div style={{ fontSize: isMobile ? 46 : isTablet ? 76 : 104 }}>
           <BigName text="ROMAN" effect={effect} accent={accent} dark={dark} seed={0} />
           <BigName text="JANSSENS" effect={effect} accent={accent} dark={dark} seed={1} startDelay={effect === 'typewriter' ? 650 : 0} />
@@ -434,6 +439,7 @@ function HeroSection({ tw }) {
           <Terminal accent={accent} dark={dark} />
         </div>
       )}
+      </div>
     </section>
   );
 }

@@ -515,39 +515,41 @@ function FeaturedProjects({ tw }) {
     <section style={{
       position:'relative',
       overflow:'hidden',
-      padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
-      maxWidth: 1600,
-      margin:'0 auto',
       ...sectionSurface(dark, 0.62),
     }}>
       <SectionPattern dark={dark} accent={accent} variant="grid" opacity={0.36} />
-      <div data-rj-reveal style={{
-        position:'relative',
-        zIndex: 1,
-        display:'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent:'space-between',
-        alignItems: isMobile ? 'flex-start' : 'flex-end',
-        marginBottom: isMobile ? 32 : 48,
-        gap: isMobile ? 12 : 24,
-      }}>
-        <SectionHeader
-          eyebrow="03 / Selected work"
-          title="Things I've built."
-          subtitle="Six projects spanning cloud infra, offensive security, and tooling. More on the Projects page."
-          accent={accent} dark={dark}
-        />
-        <a href="projects.html" style={{
-          flexShrink: 0,
-          fontSize: 14, fontWeight: 500, color: accent,
-          textDecoration:'none',
-          display:'inline-flex', alignItems:'center', gap: 6,
-          paddingBottom: 8,
-        }}>All projects →</a>
-      </div>
       <div style={{
-        position:'relative',
-        zIndex: 1,
+        padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
+        maxWidth: 1600,
+        margin:'0 auto',
+      }}>
+        <div data-rj-reveal style={{
+          position:'relative',
+          zIndex: 1,
+          display:'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent:'space-between',
+          alignItems: isMobile ? 'flex-start' : 'flex-end',
+          marginBottom: isMobile ? 32 : 48,
+          gap: isMobile ? 12 : 24,
+        }}>
+          <SectionHeader
+            eyebrow="03 / Selected work"
+            title="Things I've built."
+            subtitle="Six projects spanning cloud infra, offensive security, and tooling. More on the Projects page."
+            accent={accent} dark={dark}
+          />
+          <a href="projects.html" style={{
+            flexShrink: 0,
+            fontSize: 14, fontWeight: 500, color: accent,
+            textDecoration:'none',
+            display:'inline-flex', alignItems:'center', gap: 6,
+            paddingBottom: 8,
+          }}>All projects →</a>
+        </div>
+        <div style={{
+          position:'relative',
+          zIndex: 1,
         display:'grid',
         gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
         gap: isMobile ? 14 : 20,
@@ -558,6 +560,7 @@ function FeaturedProjects({ tw }) {
         <ProjectCard p={PROJECTS[3]} accent={accent} dark={dark} index={3} />
         <ProjectCard p={PROJECTS[4]} accent={accent} dark={dark} index={4} />
         <ProjectCard p={PROJECTS[5]} accent={accent} dark={dark} index={5} />
+      </div>
       </div>
     </section>
   );
@@ -984,13 +987,15 @@ function Certifications({ tw }) {
     <section style={{
       position: 'relative',
       overflow: 'hidden',
-      padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
-      maxWidth: 1600,
-      margin: '0 auto',
       ...sectionSurface(dark, 0.5),
     }}>
       <SectionPattern dark={dark} accent={accent} variant="diagonal" opacity={0.34} />
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      <div style={{
+        padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
+        maxWidth: 1600,
+        margin: '0 auto',
+        position: 'relative', zIndex: 1
+      }}>
         <div data-rj-reveal>
           <SectionHeader
             eyebrow="04 / Certifications"
@@ -1049,7 +1054,7 @@ function Experience({ tw }) {
   const { accent, dark } = tw;
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const subtle = dark ? 'rgba(248,252,253,0.65)' : 'rgba(31,34,36,0.75)';
-  const border = dark ? 'rgba(208,59,8,0.10)' : 'rgba(48,88,93,0.12)';
+  const border = dark ? 'rgba(208,59,8,0.06)' : 'rgba(48,88,93,0.08)';
   const alternating = !isMobile && !isTablet;
 
   return (
@@ -1057,10 +1062,9 @@ function Experience({ tw }) {
       position:'relative',
       overflow:'hidden',
       padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw 88px',
-      maxWidth: 1600,
-      margin:'0 auto',
       ...sectionSurface(dark, 0.42),
     }}>
+      <div style={{ maxWidth: 1600, margin:'0 auto' }}>
       <SectionPattern dark={dark} accent={accent} variant="dots" opacity={0.32} />
       <div style={{ position:'relative', zIndex: 1 }}>
         <div data-rj-reveal style={{
@@ -1104,7 +1108,7 @@ function Experience({ tw }) {
               left: alternating ? '50%' : isMobile ? -23 : -29,
               top: 4,
               width: 10, height: 10, borderRadius: 5,
-              background: accent, boxShadow: `0 0 0 4px ${dark ? PALETTE.indigo : PALETTE.white}, 0 0 0 5px ${border}`,
+              background: accent, boxShadow: `0 0 0 3px ${dark ? PALETTE.indigo : PALETTE.white}, 0 0 0 4px ${border}`,
               transform: alternating ? 'translateX(-50%)' : 'none',
             }}/>
             <div style={{
@@ -1133,6 +1137,7 @@ function Experience({ tw }) {
             </div>
           </div>
         ))}
+      </div>
       </div>
       </div>
     </section>
