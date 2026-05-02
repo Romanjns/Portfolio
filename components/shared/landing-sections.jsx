@@ -180,11 +180,21 @@ function SkillChip({ skill, accent, dark, onEnter, onLeave }) {
     }
   };
 
+  const handleClick = (event) => {
+    if (!isMobile) return;
+    event.stopPropagation();
+    if (ref.current) {
+      const r = ref.current.getBoundingClientRect();
+      onEnter(skill, r.left + r.width / 2, r.top);
+    }
+  };
+
   return (
     <div
       ref={ref}
       onMouseEnter={handleEnter}
       onMouseLeave={() => { setHov(false); onLeave(); }}
+      onClick={handleClick}
       style={{
         fontFamily:'"JetBrains Mono", monospace',
         fontSize: isMobile ? 11 : 12,
@@ -194,7 +204,7 @@ function SkillChip({ skill, accent, dark, onEnter, onLeave }) {
         background: hov ? (dark ? `${accent}18` : `${accent}10`) : bg,
         border:`1px solid ${hov ? accent : border}`,
         backdropFilter:'blur(8px)',
-        cursor:'default', whiteSpace:'nowrap', userSelect:'none',
+        cursor: isMobile ? 'pointer' : 'default', whiteSpace:'nowrap', userSelect:'none',
         transition:'border-color .15s, color .15s, background .15s',
       }}
     >{skill.name}</div>
@@ -257,6 +267,17 @@ function SkillsMarquee({ tw }) {
 
   const showTip  = (skill, x, y) => setTooltip({ skill, x, y });
   const hideTip  = ()             => setTooltip(null);
+
+  React.useEffect(() => {
+    if (!isMobile || !tooltip) return;
+    const close = () => setTooltip(null);
+    window.addEventListener('click', close);
+    window.addEventListener('scroll', close, { passive: true });
+    return () => {
+      window.removeEventListener('click', close);
+      window.removeEventListener('scroll', close);
+    };
+  }, [isMobile, tooltip]);
 
   return (
     <section style={{
@@ -663,7 +684,7 @@ const CERT_COLORS = {
   green: '#6d8f55',
 };
 
-function CertBadge({ cert, accent, dark, index }) {
+function CertBadge({ cert, accent, dark, index, reveal = true }) {
   const { isMobile } = useViewport();
   const [hovered, setHovered] = React.useState(false);
   const isIssued = cert.status === 'Issued';
@@ -716,7 +737,7 @@ function CertBadge({ cert, accent, dark, index }) {
   return (
     <div
       className="rj-cert-item"
-      data-rj-reveal
+      {...(reveal ? { 'data-rj-reveal': true } : {})}
       style={{
         '--rj-delay': `${60 + index * 90}ms`,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -869,23 +890,25 @@ function Certifications({ tw }) {
   const { accent, dark } = tw;
   const slideWidth = 194;
   const carouselWidth = 330;
-  const certSlides = React.useMemo(() => [
-    CERTS[CERTS.length - 1],
-    ...CERTS,
-    CERTS[0],
-  ], []);
-  const [activeCert, setActiveCert] = React.useState(1);
+  const [activeCert, setActiveCert] = React.useState(0);
+  const [carouselStep, setCarouselStep] = React.useState(0);
   const [carouselTransition, setCarouselTransition] = React.useState(true);
   const [dragX, setDragX] = React.useState(0);
   const [autoResetKey, setAutoResetKey] = React.useState(0);
   const dragStartRef = React.useRef(null);
   const movingRef = React.useRef(false);
-  const visibleCert = ((activeCert - 1 + CERTS.length) % CERTS.length);
-  const carouselOffset = ((carouselWidth - slideWidth) / 2) - (activeCert * slideWidth) + dragX;
+  const visibleCert = activeCert;
+  const certSlides = React.useMemo(() => {
+    const prev = (activeCert - 1 + CERTS.length) % CERTS.length;
+    const next = (activeCert + 1) % CERTS.length;
+    return [CERTS[prev], CERTS[activeCert], CERTS[next]];
+  }, [activeCert]);
+  const carouselOffset = ((carouselWidth - slideWidth) / 2) - slideWidth - (carouselStep * slideWidth) + dragX;
 
   React.useEffect(() => {
     if (!isMobile) {
-      setActiveCert(1);
+      setActiveCert(0);
+      setCarouselStep(0);
       return;
     }
     const reduced = typeof window !== 'undefined' &&
@@ -896,7 +919,7 @@ function Certifications({ tw }) {
       if (movingRef.current) return;
       movingRef.current = true;
       setCarouselTransition(true);
-      setActiveCert(i => i + 1);
+      setCarouselStep(1);
     }, 3200);
     return () => clearInterval(timer);
   }, [isMobile, autoResetKey]);
@@ -909,12 +932,10 @@ function Certifications({ tw }) {
 
   const finishCarouselMove = (event) => {
     if (event.currentTarget !== event.target) return;
-    if (activeCert === CERTS.length + 1) {
+    if (carouselStep !== 0) {
       setCarouselTransition(false);
-      setActiveCert(1);
-    } else if (activeCert === 0) {
-      setCarouselTransition(false);
-      setActiveCert(CERTS.length);
+      setActiveCert(i => (i + carouselStep + CERTS.length) % CERTS.length);
+      setCarouselStep(0);
     }
     movingRef.current = false;
   };
@@ -923,36 +944,37 @@ function Certifications({ tw }) {
 
   const showCert = (i, manual = true) => {
     if (movingRef.current || i === visibleCert) return;
-    movingRef.current = true;
-    setCarouselTransition(true);
-    setActiveCert(i + 1);
+    setCarouselTransition(false);
+    setCarouselStep(0);
+    setDragX(0);
+    setActiveCert(i);
     if (manual) resetAutoAdvance();
   };
 
   const moveCert = (direction, manual = true) => {
-    if (movingRef.current) return;
+    if (movingRef.current || carouselStep !== 0) return;
     movingRef.current = true;
     setCarouselTransition(true);
-    setActiveCert(i => i + direction);
+    setCarouselStep(direction > 0 ? 1 : -1);
     if (manual) resetAutoAdvance();
   };
 
   const startDrag = (event) => {
-    if (!isMobile) return;
-    const point = event.touches ? event.touches[0] : event;
-    dragStartRef.current = { x: point.clientX, lastX: point.clientX };
+    if (!isMobile || movingRef.current || carouselStep !== 0) return;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    dragStartRef.current = { x: event.clientX, lastX: event.clientX, pointerId: event.pointerId };
     setCarouselTransition(false);
   };
 
   const moveDrag = (event) => {
-    if (!dragStartRef.current) return;
-    const point = event.touches ? event.touches[0] : event;
-    dragStartRef.current.lastX = point.clientX;
-    setDragX(Math.max(-88, Math.min(88, point.clientX - dragStartRef.current.x)));
+    if (!dragStartRef.current || dragStartRef.current.pointerId !== event.pointerId) return;
+    dragStartRef.current.lastX = event.clientX;
+    setDragX(Math.max(-104, Math.min(104, event.clientX - dragStartRef.current.x)));
   };
 
-  const endDrag = () => {
-    if (!dragStartRef.current) return;
+  const endDrag = (event) => {
+    if (!dragStartRef.current || dragStartRef.current.pointerId !== event.pointerId) return;
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
     const delta = dragStartRef.current.lastX - dragStartRef.current.x;
     dragStartRef.current = null;
     setDragX(0);
@@ -1002,13 +1024,10 @@ function Certifications({ tw }) {
               aria-label="Certificates carousel"
               tabIndex={0}
               onKeyDown={handleCarouselKeyDown}
-              onMouseDown={startDrag}
-              onMouseMove={moveDrag}
-              onMouseUp={endDrag}
-              onMouseLeave={endDrag}
-              onTouchStart={startDrag}
-              onTouchMove={moveDrag}
-              onTouchEnd={endDrag}
+              onPointerDown={startDrag}
+              onPointerMove={moveDrag}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
             >
               <div
                 className="rj-cert-carousel-track"
@@ -1020,7 +1039,7 @@ function Certifications({ tw }) {
               >
                 {certSlides.map((c, i) => (
                   <div key={`${c.name}-${i}`} className="rj-cert-carousel-slide">
-                    <CertBadge cert={c} accent={accent} dark={dark} index={i} />
+                    <CertBadge cert={c} accent={accent} dark={dark} index={i} reveal={false} />
                   </div>
                 ))}
               </div>
