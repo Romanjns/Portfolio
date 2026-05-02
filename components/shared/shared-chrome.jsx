@@ -169,18 +169,20 @@ function Nav({ current, dark, accent, onToggleDark }) {
     );
   };
 
-  const border = dark ? 'rgba(248,252,253,0.10)' : 'rgba(31,34,36,0.10)';
+  const border = dark ? 'rgba(248,252,253,0.12)' : 'rgba(31,34,36,0.12)';
 
   const headerSurface = {
-    background: dark
-      ? (hasScrolled ? 'rgba(31,34,36,0.88)' : 'rgba(31,34,36,0.52)')
-      : (hasScrolled ? 'rgba(248,252,253,0.93)' : 'rgba(248,252,253,0.68)'),
-    backdropFilter: 'blur(14px) saturate(140%)',
-    WebkitBackdropFilter: 'blur(14px) saturate(140%)',
-    transition: 'background 320ms ease',
+    background: isMobile
+      ? dark ? 'rgba(31,36,37,0.92)' : 'rgba(237,244,243,0.94)'
+      : hasScrolled
+        ? dark ? 'rgba(31,36,37,0.90)' : 'rgba(237,244,243,0.94)'
+        : 'transparent',
+    backdropFilter: isMobile || hasScrolled ? 'blur(14px) saturate(140%)' : 'none',
+    WebkitBackdropFilter: isMobile || hasScrolled ? 'blur(14px) saturate(140%)' : 'none',
+    transition: 'background 320ms ease, backdrop-filter 320ms ease',
   };
 
-  const Menu = () => (
+  const menu = (
     <div style={{
       position:'fixed',
       top: isMobile ? 60 : 80,
@@ -196,7 +198,7 @@ function Nav({ current, dark, accent, onToggleDark }) {
       boxShadow: dark ? '0 20px 56px -8px rgba(0,0,0,0.65)' : '0 20px 56px -8px rgba(31,34,36,0.12)',
       zIndex: 99,
       padding: '8px 5vw 16px',
-      animation: 'slideDown 0.28s cubic-bezier(.2,.8,.2,1)',
+      animation: menuOpen ? 'slideDown 0.28s cubic-bezier(.2,.8,.2,1)' : 'none',
       overflow:'hidden',
       transform: 'translateZ(0)',
       WebkitTransform: 'translateZ(0)',
@@ -248,7 +250,7 @@ function Nav({ current, dark, accent, onToggleDark }) {
     <header style={{
       position:'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       ...headerSurface,
-      borderBottom: 'none',
+      borderBottom: isMobile || hasScrolled ? `1px solid ${border}` : '1px solid transparent',
       boxShadow: 'none',
       overflow:'hidden',
       transform: 'translateZ(0)',
@@ -347,7 +349,7 @@ function Nav({ current, dark, accent, onToggleDark }) {
       </div>
       </div>
     </header>
-    {menuOpen && <Menu />}
+    {menuOpen && menu}
     </>
   );
 }
@@ -357,6 +359,9 @@ function Footer({ dark, accent }) {
   const subtle = dark ? 'rgba(248,252,253,0.55)' : 'rgba(31,34,36,0.60)';
   const border = dark ? 'rgba(248,252,253,0.10)' : 'rgba(31,34,36,0.12)';
   const fg = dark ? PALETTE.white : PALETTE.indigo;
+  const footerBg = dark
+    ? 'linear-gradient(180deg, rgba(31,36,37,0.92), rgba(31,34,36,0.98))'
+    : 'linear-gradient(180deg, rgba(238,247,245,0.94), rgba(248,252,253,0.98))';
 
   const socials = [
     { label:'GitHub',   href:'https://github.com',   icon:'github' },
@@ -370,6 +375,8 @@ function Footer({ dark, accent }) {
       padding: isMobile ? '40px 5vw 28px' : isTablet ? '44px 5vw 30px' : '48px 6vw 32px',
       fontFamily:'"Manrope", sans-serif',
       color: subtle,
+      background: footerBg,
+      borderTop: `1px solid ${border}`,
     }}>
       <div style={{
         maxWidth: 1600, margin:'0 auto',
@@ -463,11 +470,24 @@ function FooterLink({ href, children, accent = PALETTE.blue }) {
       color: hovered ? accent : 'inherit',
       textDecoration:'none',
       fontSize: 14,
-      transition:'color .15s',
+      position:'relative',
+      display:'inline-flex',
+      width:'fit-content',
+      transform: hovered ? 'translateX(4px)' : 'none',
+      transition:'color .16s ease, transform .16s ease',
     }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}>
       {children}
+      <span style={{
+        position:'absolute',
+        left:0,
+        right: hovered ? 0 : '100%',
+        bottom:-3,
+        height:1,
+        background: accent,
+        transition:'right .18s ease',
+      }}/>
     </a>
   );
 }

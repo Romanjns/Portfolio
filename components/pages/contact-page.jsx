@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { PALETTE, useViewport, SectionPattern, globalNoiseTexture } from '../shared/hero-shared.jsx';
+import { PALETTE, useViewport, globalNoiseTexture, getSectionBackgroundTone } from '../shared/hero-shared.jsx';
 import { PageShell } from '../shared/shared-chrome.jsx';
 import { useTweaks } from '../shared/use-tweaks.jsx';
 
@@ -11,8 +11,10 @@ function ContactPage() {
   const { dark, accent } = tw;
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const subtle = dark ? 'rgba(248,252,253,0.68)' : 'rgba(31,34,36,0.70)';
-  const border = dark ? 'rgba(248,252,253,0.11)' : 'rgba(31,34,36,0.13)';
-  const cardBg = dark ? 'rgba(248,252,253,0.05)' : 'rgba(248,252,253,0.65)';
+  const border = dark ? 'rgba(248,252,253,0.12)' : 'rgba(31,34,36,0.13)';
+  const cardBg = dark
+    ? 'linear-gradient(180deg, rgba(39,48,49,0.92), rgba(31,34,36,0.97))'
+    : 'linear-gradient(180deg, rgba(249,251,248,0.98), rgba(237,245,243,0.96))';
 
   const [copied, setCopied] = React.useState(false);
   const EMAIL = 'khaiboulinr@gmail.com';
@@ -60,10 +62,10 @@ function ContactPage() {
           padding: isMobile ? '14px 16px' : '16px 18px',
           borderRadius: 12,
           border: `1px solid ${hovered ? accent : border}`,
-          background: hovered ? `${accent}08` : 'transparent',
+          background: hovered ? `${accent}08` : dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.58)',
           textDecoration:'none', color:'inherit',
-          transition:'border-color .2s, background .2s, box-shadow .2s',
-          boxShadow: hovered ? `0 4px 16px -8px ${accent}44` : 'none',
+          transition:'border-color .2s, background .2s, transform .2s',
+          transform: hovered ? 'translateY(-2px)' : 'none',
           flex: 1,
         }}
         onMouseEnter={() => setHovered(true)}
@@ -99,21 +101,10 @@ function ContactPage() {
       <section style={{
         position:'relative', overflow:'hidden',
         padding: isMobile ? '84px 5vw 84px' : isTablet ? '80px 5vw 80px' : '78px 6vw 78px',
-        maxWidth: 1400, margin:'0 auto',
-        background: dark ? PALETTE.indigo : PALETTE.white,
+        background: getSectionBackgroundTone(0, dark),
         ...globalNoiseTexture(dark),
       }}>
-        {/* Subtle fade effect for smooth section transition */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: dark
-            ? 'linear-gradient(to bottom, rgba(31,34,36,0.4) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.2) 100%)'
-            : 'linear-gradient(to bottom, rgba(248,252,253,0.25) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.15) 100%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}/>
-        <div style={{ position:'relative', zIndex: 1 }}>
+        <div style={{ position:'relative', zIndex: 1, maxWidth: 1400, margin:'0 auto' }}>
 
           <div className="rj-fadeup" style={{
             fontFamily:'"JetBrains Mono", monospace',
@@ -147,7 +138,9 @@ function ContactPage() {
                 border: `1px solid ${border}`,
                 background: cardBg,
                 backdropFilter:'blur(14px) saturate(140%)',
-                boxShadow: dark ? '0 8px 40px -16px rgba(0,0,0,0.5)' : '0 8px 40px -16px rgba(31,34,36,0.14)',
+                boxShadow: dark
+                  ? '0 1px 0 rgba(255,255,255,0.04) inset'
+                  : '0 1px 0 rgba(255,255,255,0.85) inset',
               }}>
                 <div style={{
                   width: 44, height: 44, borderRadius: 10,
@@ -170,9 +163,10 @@ function ContactPage() {
                   fontSize: isMobile ? 17 : 20, fontWeight: 700,
                   color: fg, wordBreak:'break-all', lineHeight: 1.2,
                 }}>{EMAIL}</div>
-                <a href={`mailto:${EMAIL}`} style={{
+                <a href={`mailto:${EMAIL}`} className="rj-secondary-action" style={{
                   marginTop: 16, display:'inline-flex', alignItems:'center', gap: 6,
                   fontSize: 13, color: accent, fontWeight: 500, textDecoration:'none',
+                  transition:'transform .18s ease, color .18s ease',
                 }}>
                   Send email
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 6.5h8M8 3.5l3 3-3 3"/></svg>
@@ -193,15 +187,15 @@ function ContactPage() {
               </div>
 
               {/* Copy button */}
-              <button onClick={handleCopy} style={{
+              <button onClick={handleCopy} className="rj-secondary-action" style={{
                 display:'flex', alignItems:'center', justifyContent:'center', gap: 8,
                 padding:'13px', borderRadius: 12,
                 border: `1px solid ${copied ? accent + '55' : border}`,
-                background: copied ? accent + '0e' : 'transparent',
+                background: copied ? accent + '0e' : dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.60)',
                 color: copied ? accent : subtle,
                 fontSize: 13, fontFamily:'"JetBrains Mono", monospace',
                 fontWeight: 600, cursor:'pointer',
-                transition:'all .2s',
+                transition:'transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease',
                 letterSpacing: 0.5,
               }}>
                 {copied ? (
@@ -223,7 +217,10 @@ function ContactPage() {
               <div style={{
                 borderRadius: 16, overflow:'hidden',
                 border: `1px solid ${border}`,
-                boxShadow: dark ? '0 8px 40px -16px rgba(0,0,0,0.5)' : '0 8px 40px -16px rgba(31,34,36,0.14)',
+                background: dark ? 'rgba(31,34,36,0.74)' : 'rgba(255,255,255,0.70)',
+                boxShadow: dark
+                  ? '0 1px 0 rgba(255,255,255,0.04) inset'
+                  : '0 1px 0 rgba(255,255,255,0.85) inset',
                 height: isMobile ? 240 : isTablet ? 300 : '100%',
                 minHeight: isMobile || isTablet ? 0 : 320,
                 position:'relative',

@@ -168,8 +168,8 @@ function SkillChip({ skill, accent, dark, onEnter, onLeave }) {
   const ref    = React.useRef(null);
   const [hov, setHov] = React.useState(false);
   const subtle = dark ? 'rgba(248,252,253,0.62)' : 'rgba(31,34,36,0.72)';
-  const border = dark ? 'rgba(208,59,8,0.13)' : 'rgba(48,88,93,0.14)';
-  const bg     = dark ? 'rgba(31,34,36,0.65)' : 'rgba(248,252,253,0.80)';
+  const border = dark ? 'rgba(248,252,253,0.10)' : 'rgba(31,34,36,0.12)';
+  const bg     = dark ? 'rgba(248,252,253,0.055)' : 'rgba(255,255,255,0.72)';
 
   const handleEnter = () => {
     if (isMobile) return;
@@ -191,7 +191,7 @@ function SkillChip({ skill, accent, dark, onEnter, onLeave }) {
         padding: isMobile ? '7px 12px' : '7px 15px',
         borderRadius: 99, flexShrink: 0,
         color: hov ? accent : subtle,
-        background: hov ? (dark ? `${accent}20` : `${accent}14`) : bg,
+        background: hov ? (dark ? `${accent}18` : `${accent}10`) : bg,
         border:`1px solid ${hov ? accent : border}`,
         backdropFilter:'blur(8px)',
         cursor:'default', whiteSpace:'nowrap', userSelect:'none',
@@ -266,16 +266,7 @@ function SkillsMarquee({ tw }) {
       background: getSectionBackgroundTone(0, dark),
       ...globalNoiseTexture(dark),
     }}>
-      {/* Subtle fade effect at top and bottom for smooth transition */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: dark
-          ? 'linear-gradient(to bottom, rgba(31,34,36,0.4) 0%, transparent 10%, transparent 90%, rgba(31,34,36,0.2) 100%)'
-          : 'linear-gradient(to bottom, rgba(248,252,253,0.5) 0%, transparent 10%, transparent 90%, rgba(248,252,253,0.3) 100%)',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}/>
+      <div style={sectionFade('top', dark)}/>
       {/* Header + filter — padded */}
       <div data-rj-reveal style={{ position:'relative', zIndex: 1, padding: isMobile ? '0 5vw' : isTablet ? '0 5vw' : '0 6vw', maxWidth: 1600, margin:'0 auto', marginBottom: isMobile ? 32 : 44 }}>
         <SectionHeader
@@ -404,7 +395,10 @@ const PROJECTS = [
 function ProjectCard({ p, accent, dark, index = 0 }) {
   const { isMobile, isTablet } = useViewport();
   const fg = dark ? PALETTE.white : PALETTE.indigo;
-  const cardBg = dark ? PALETTE.indigo : PALETTE.white;
+  const cardBg = dark
+    ? 'linear-gradient(180deg, rgba(39,48,49,0.94), rgba(31,34,36,0.98))'
+    : 'linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,252,251,0.98))';
+  const border = dark ? 'rgba(248,252,253,0.12)' : 'rgba(48,88,93,0.24)';
   const [hovered, setHovered] = React.useState(false);
   const [pressed, setPressed] = React.useState(false);
   const active = hovered && !pressed;
@@ -419,18 +413,30 @@ function ProjectCard({ p, accent, dark, index = 0 }) {
         '--rj-delay': `${Math.min(index, 5) * 70}ms`,
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 10,
-        padding: 5,
-        border: `4px solid ${active ? PALETTE.blueDk : 'transparent'}`,
+        borderRadius: 12,
+        padding: 6,
+        width: '100%',
+        maxWidth: '100%',
+        minWidth: 0,
+        boxSizing: 'border-box',
+        border: `1px solid ${active ? PALETTE.blueDk : border}`,
         cursor: 'pointer',
-        backgroundColor: cardBg,
+        background: cardBg,
         textDecoration: 'none',
         color: 'inherit',
-        transition: 'box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out, transform 0.15s ease-in-out',
-        boxShadow: active
-          ? `10px 10px 0 ${accent}, 20px 20px 0 ${PALETTE.blueDk}`
+        transition: 'box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background 0.2s ease',
+        boxShadow: active && !isMobile
+          ? `10px 18px 0 ${accent}, 20px 36px 0 ${PALETTE.blueDk}, 0 16px 38px -30px rgba(31,34,36,0.28)`
+          : active
+            ? dark
+              ? '0 18px 44px -28px rgba(0,0,0,0.78)'
+              : '0 18px 44px -28px rgba(48,88,93,0.35)'
+            : dark
+              ? '0 18px 44px -34px rgba(0,0,0,0.70), 0 1px 0 rgba(255,255,255,0.04) inset'
+              : '0 16px 44px -32px rgba(48,88,93,0.24), 0 1px 0 rgba(255,255,255,0.85) inset',
+        transform: active
+          ? isMobile ? 'translateY(-3px)' : 'translate(-8px, -12px)'
           : 'none',
-        transform: active ? 'translate(-20px, -20px)' : 'none',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setPressed(false); }}
@@ -442,7 +448,9 @@ function ProjectCard({ p, accent, dark, index = 0 }) {
         width: '100%',
         height: previewHeight,
         borderRadius: 7,
-        background: `linear-gradient(135deg, ${accent}38 0%, ${PALETTE.blueDk}55 100%)`,
+        background: dark
+          ? `linear-gradient(135deg, rgba(48,88,93,0.35), rgba(31,34,36,0.82)), linear-gradient(180deg, ${accent}26, transparent)`
+          : `linear-gradient(135deg, rgba(48,88,93,0.18), rgba(255,255,255,0.70)), linear-gradient(180deg, ${accent}18, transparent)`,
         position: 'relative',
         overflow: 'hidden',
         flexShrink: 0,
@@ -513,7 +521,7 @@ function ProjectCard({ p, accent, dark, index = 0 }) {
               padding: '0.3em 0.75em',
               borderRadius: 15,
               fontSize: 11,
-              letterSpacing: -0.4,
+              letterSpacing: 0,
               fontFamily: '"JetBrains Mono", monospace',
             }}>• {s}</span>
           ))}
@@ -533,16 +541,6 @@ function FeaturedProjects({ tw }) {
       background: getSectionBackgroundTone(1, dark),
       ...globalNoiseTexture(dark),
     }}>
-      {/* Subtle fade effect for smooth section transition */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: dark
-          ? 'linear-gradient(to bottom, rgba(31,34,36,0.3) 0%, transparent 10%, transparent 90%, rgba(31,34,36,0.2) 100%)'
-          : 'linear-gradient(to bottom, rgba(248,252,253,0.4) 0%, transparent 10%, transparent 90%, rgba(248,252,253,0.3) 100%)',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}/>
       <div style={{
         padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
         maxWidth: 1600,
@@ -598,6 +596,57 @@ function FeaturedProjects({ tw }) {
   s.id = 'rj-cert-kf';
   s.textContent = `
     @keyframes rjSpinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .rj-cert-stack {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .rj-cert-item {
+      position: relative;
+      transition: transform .3s cubic-bezier(.2,.8,.2,1), filter .3s cubic-bezier(.2,.8,.2,1);
+    }
+    .rj-cert-item:hover {
+      transform: translateY(-10px);
+    }
+    .rj-cert-carousel {
+      width: 100%;
+      max-width: 330px;
+      margin: 0 auto;
+      overflow: hidden;
+      touch-action: pan-y;
+      padding: 12px 0 4px;
+      mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    }
+    .rj-cert-carousel-track {
+      display: flex;
+      align-items: flex-start;
+      transition: transform .55s cubic-bezier(.2,.8,.2,1);
+      will-change: transform;
+    }
+    .rj-cert-carousel-slide {
+      flex: 0 0 194px;
+      display: flex;
+      justify-content: center;
+    }
+    @media (max-width: 719px) {
+      .rj-cert-stack {
+        align-items: center;
+      }
+      .rj-cert-item:hover {
+        transform: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rj-cert-item,
+      .rj-cert-carousel-track {
+        transition: none !important;
+      }
+      .rj-cert-item:hover {
+        transform: none !important;
+      }
+    }
   `;
   document.head.appendChild(s);
 })();
@@ -609,19 +658,19 @@ const CERTS = [
 ];
 
 const CERT_COLORS = {
-  'Amazon Web Services': '#d03b08',
-  'Cisco':               '#1d6fa4',
-  'IELTS':               '#c71f37',
-  'CompTIA':             '#c01c2c',
-  'Microsoft':           '#0078d4',
-  'TryHackMe':           '#1a9e5c',
+  primary: PALETTE.blue,
+  secondary: PALETTE.blueDk,
+  green: '#6d8f55',
 };
 
 function CertBadge({ cert, accent, dark, index }) {
   const { isMobile } = useViewport();
   const [hovered, setHovered] = React.useState(false);
   const isIssued = cert.status === 'Issued';
-  const color = CERT_COLORS[cert.issuer] || accent;
+  const orange = CERT_COLORS.primary;
+  const teal = CERT_COLORS.secondary;
+  const green = CERT_COLORS.green;
+  const color = orange;
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const subtle = dark ? 'rgba(248,252,253,0.60)' : 'rgba(31,34,36,0.68)';
 
@@ -666,14 +715,13 @@ function CertBadge({ cert, accent, dark, index }) {
 
   return (
     <div
+      className="rj-cert-item"
       data-rj-reveal
       style={{
         '--rj-delay': `${60 + index * 90}ms`,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
-        gap: 20, cursor: 'default',
+        gap: 18, cursor: 'default',
         width: isMobile ? 158 : 194,
-        transition: 'transform .30s cubic-bezier(.2,.8,.2,1)',
-        transform: hovered ? 'translateY(-10px)' : 'none',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -687,14 +735,14 @@ function CertBadge({ cert, accent, dark, index }) {
               {isIssued ? (
                 <>
                   <stop offset="0%" stopColor="rgba(255,255,255,0.60)"/>
-                  <stop offset="13%" stopColor={color}/>
-                  <stop offset="62%" stopColor={color} stopOpacity="0.90"/>
-                  <stop offset="100%" stopColor="rgba(0,0,0,0.44)"/>
+                  <stop offset="14%" stopColor={orange}/>
+                  <stop offset="54%" stopColor={green}/>
+                  <stop offset="100%" stopColor={teal}/>
                 </>
               ) : (
                 <>
-                  <stop offset="0%" stopColor={dark ? '#3d4348' : '#d2dde6'}/>
-                  <stop offset="100%" stopColor={dark ? '#12161a' : '#a4b6c2'}/>
+                  <stop offset="0%" stopColor={dark ? teal : green}/>
+                  <stop offset="100%" stopColor={dark ? '#151b1c' : '#dce9e3'}/>
                 </>
               )}
             </linearGradient>
@@ -709,19 +757,19 @@ function CertBadge({ cert, accent, dark, index }) {
           {/* ── Outer decorative ring ── */}
           <circle cx={cx} cy={cy} r={ringR}
             fill="none"
-            stroke={isIssued ? color : (dark ? 'rgba(248,252,253,0.16)' : 'rgba(31,34,36,0.14)')}
+            stroke={isIssued ? teal : (dark ? 'rgba(248,252,253,0.16)' : 'rgba(31,34,36,0.14)')}
             strokeWidth={isIssued ? 1.2 : 0.8}
             opacity={0.72}
           />
           {/* Tick marks radiating outward (issued badges) */}
           {ticks.map((t, i) => (
             <line key={i} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2}
-              stroke={color} strokeWidth={t.w} strokeLinecap="round" opacity={t.op}/>
+              stroke={i % 2 === 0 ? orange : green} strokeWidth={t.w} strokeLinecap="round" opacity={t.op}/>
           ))}
           {/* Spinning dashed arc (in-progress) */}
           {!isIssued && (
             <circle cx={cx} cy={cy} r={ringR - 1}
-              fill="none" stroke={accent} strokeWidth="1.5"
+              fill="none" stroke={orange} strokeWidth="1.5"
               strokeDasharray={`${2 * Math.PI * (ringR - 1) * 0.55} ${2 * Math.PI * (ringR - 1) * 0.45}`}
               strokeLinecap="round"
               style={{ transformOrigin: `${cx}px ${cy}px`, animation: 'rjSpinSlow 9s linear infinite', opacity: 0.55 }}
@@ -730,7 +778,7 @@ function CertBadge({ cert, accent, dark, index }) {
 
           {/* ── Hex glow halo (slightly oversized, faint) ── */}
           <polygon points={hexPts(hexR + 6)}
-            fill={isIssued ? `${color}1c` : (dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)')}
+            fill={isIssued ? `${green}24` : (dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)')}
           />
 
           {/* ── Hex main body ── */}
@@ -787,6 +835,7 @@ function CertBadge({ cert, accent, dark, index }) {
               />
             </g>
           )}
+
         </svg>
       </div>
 
@@ -805,10 +854,10 @@ function CertBadge({ cert, accent, dark, index }) {
           display: 'inline-block',
           fontFamily: '"JetBrains Mono", monospace',
           fontSize: 9.5, letterSpacing: 1.2, fontWeight: 700, textTransform: 'uppercase',
-          color: isIssued ? color : accent,
+          color: isIssued ? orange : teal,
           padding: '3px 12px', borderRadius: 99,
-          border: `1px solid ${isIssued ? color + '55' : accent + '44'}`,
-          background: isIssued ? color + '16' : accent + '10',
+          border: `1px solid ${isIssued ? orange + '55' : teal + '44'}`,
+          background: isIssued ? `${green}18` : `${teal}10`,
         }}>{isIssued ? `✓ ${cert.year}` : 'In progress'}</span>
       </div>
     </div>
@@ -818,24 +867,119 @@ function CertBadge({ cert, accent, dark, index }) {
 function Certifications({ tw }) {
   const { isMobile, isTablet } = useViewport();
   const { accent, dark } = tw;
+  const slideWidth = 194;
+  const carouselWidth = 330;
+  const certSlides = React.useMemo(() => [
+    CERTS[CERTS.length - 1],
+    ...CERTS,
+    CERTS[0],
+  ], []);
+  const [activeCert, setActiveCert] = React.useState(1);
+  const [carouselTransition, setCarouselTransition] = React.useState(true);
+  const [dragX, setDragX] = React.useState(0);
+  const [autoResetKey, setAutoResetKey] = React.useState(0);
+  const dragStartRef = React.useRef(null);
+  const movingRef = React.useRef(false);
+  const visibleCert = ((activeCert - 1 + CERTS.length) % CERTS.length);
+  const carouselOffset = ((carouselWidth - slideWidth) / 2) - (activeCert * slideWidth) + dragX;
+
+  React.useEffect(() => {
+    if (!isMobile) {
+      setActiveCert(1);
+      return;
+    }
+    const reduced = typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+    const timer = setInterval(() => {
+      if (movingRef.current) return;
+      movingRef.current = true;
+      setCarouselTransition(true);
+      setActiveCert(i => i + 1);
+    }, 3200);
+    return () => clearInterval(timer);
+  }, [isMobile, autoResetKey]);
+
+  React.useEffect(() => {
+    if (!isMobile || carouselTransition) return;
+    const raf = requestAnimationFrame(() => setCarouselTransition(true));
+    return () => cancelAnimationFrame(raf);
+  }, [isMobile, carouselTransition]);
+
+  const finishCarouselMove = (event) => {
+    if (event.currentTarget !== event.target) return;
+    if (activeCert === CERTS.length + 1) {
+      setCarouselTransition(false);
+      setActiveCert(1);
+    } else if (activeCert === 0) {
+      setCarouselTransition(false);
+      setActiveCert(CERTS.length);
+    }
+    movingRef.current = false;
+  };
+
+  const resetAutoAdvance = () => setAutoResetKey(k => k + 1);
+
+  const showCert = (i, manual = true) => {
+    if (movingRef.current || i === visibleCert) return;
+    movingRef.current = true;
+    setCarouselTransition(true);
+    setActiveCert(i + 1);
+    if (manual) resetAutoAdvance();
+  };
+
+  const moveCert = (direction, manual = true) => {
+    if (movingRef.current) return;
+    movingRef.current = true;
+    setCarouselTransition(true);
+    setActiveCert(i => i + direction);
+    if (manual) resetAutoAdvance();
+  };
+
+  const startDrag = (event) => {
+    if (!isMobile) return;
+    const point = event.touches ? event.touches[0] : event;
+    dragStartRef.current = { x: point.clientX, lastX: point.clientX };
+    setCarouselTransition(false);
+  };
+
+  const moveDrag = (event) => {
+    if (!dragStartRef.current) return;
+    const point = event.touches ? event.touches[0] : event;
+    dragStartRef.current.lastX = point.clientX;
+    setDragX(Math.max(-88, Math.min(88, point.clientX - dragStartRef.current.x)));
+  };
+
+  const endDrag = () => {
+    if (!dragStartRef.current) return;
+    const delta = dragStartRef.current.lastX - dragStartRef.current.x;
+    dragStartRef.current = null;
+    setDragX(0);
+    setCarouselTransition(true);
+    resetAutoAdvance();
+    if (Math.abs(delta) < 42) return;
+    moveCert(delta < 0 ? 1 : -1);
+  };
+
+  const handleCarouselKeyDown = (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      moveCert(1);
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      moveCert(-1);
+    }
+  };
 
   return (
     <section style={{
       position: 'relative',
       overflow: 'hidden',
-      background: dark ? PALETTE.indigo : PALETTE.white,
+      background: getSectionBackgroundTone(2, dark),
       ...globalNoiseTexture(dark),
     }}>
-      {/* Subtle fade effect for smooth section transition */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: dark
-          ? 'linear-gradient(to bottom, rgba(31,34,36,0.4) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.3) 100%)'
-          : 'linear-gradient(to bottom, rgba(248,252,253,0.25) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.2) 100%)',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}/>
+      <div style={sectionFade('top', dark)}/>
       <div style={{
         padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
         maxWidth: 1600,
@@ -850,18 +994,119 @@ function Certifications({ tw }) {
             accent={accent} dark={dark} align="center"
           />
         </div>
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: isMobile ? 32 : 48,
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          paddingTop: isMobile ? 8 : 20,
-        }}>
-          {CERTS.map((c, i) => (
-            <CertBadge key={c.name} cert={c} accent={accent} dark={dark} index={i} />
-          ))}
-        </div>
+        {isMobile ? (
+          <div data-rj-reveal style={{ paddingTop: 6 }}>
+            <div
+              className="rj-cert-carousel"
+              role="region"
+              aria-label="Certificates carousel"
+              tabIndex={0}
+              onKeyDown={handleCarouselKeyDown}
+              onMouseDown={startDrag}
+              onMouseMove={moveDrag}
+              onMouseUp={endDrag}
+              onMouseLeave={endDrag}
+              onTouchStart={startDrag}
+              onTouchMove={moveDrag}
+              onTouchEnd={endDrag}
+            >
+              <div
+                className="rj-cert-carousel-track"
+                onTransitionEnd={finishCarouselMove}
+                style={{
+                  transform: `translateX(${carouselOffset}px)`,
+                  transition: carouselTransition ? undefined : 'none',
+                }}
+              >
+                {certSlides.map((c, i) => (
+                  <div key={`${c.name}-${i}`} className="rj-cert-carousel-slide">
+                    <CertBadge cert={c} accent={accent} dark={dark} index={i} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 12,
+              marginTop: 14,
+            }}>
+              <button
+                type="button"
+                aria-label="Previous certificate"
+                onClick={() => moveCert(-1)}
+                style={{
+                  width: 36,
+                  height: 32,
+                  borderRadius: 99,
+                  border: `1px solid ${dark ? 'rgba(248,252,253,0.14)' : 'rgba(31,34,36,0.14)'}`,
+                  background: dark ? 'rgba(248,252,253,0.06)' : 'rgba(255,255,255,0.58)',
+                  color: accent,
+                  fontSize: 18,
+                  lineHeight: 1,
+                  cursor: 'pointer',
+                }}
+              >‹</button>
+              <button
+                type="button"
+                aria-label="Next certificate"
+                onClick={() => moveCert(1)}
+                style={{
+                  width: 36,
+                  height: 32,
+                  borderRadius: 99,
+                  border: `1px solid ${dark ? 'rgba(248,252,253,0.14)' : 'rgba(31,34,36,0.14)'}`,
+                  background: dark ? 'rgba(248,252,253,0.06)' : 'rgba(255,255,255,0.58)',
+                  color: accent,
+                  fontSize: 18,
+                  lineHeight: 1,
+                  cursor: 'pointer',
+                }}
+              >›</button>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 8,
+              marginTop: 12,
+            }}>
+              {CERTS.map((c, i) => {
+                const active = i === visibleCert;
+                return (
+                  <button
+                    key={c.name}
+                    type="button"
+                    aria-label={`Show ${c.name}`}
+                    onClick={() => showCert(i)}
+                    style={{
+                      width: active ? 22 : 8,
+                      height: 8,
+                      borderRadius: 99,
+                      border: 'none',
+                      padding: 0,
+                      cursor: 'pointer',
+                      background: active ? accent : (dark ? 'rgba(248,252,253,0.22)' : 'rgba(31,34,36,0.20)'),
+                      transition: 'width .2s ease, background .2s ease',
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 48,
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            paddingTop: 20,
+          }} className="rj-cert-stack">
+            {CERTS.map((c, i) => (
+              <CertBadge key={c.name} cert={c} accent={accent} dark={dark} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
@@ -907,20 +1152,11 @@ function Experience({ tw }) {
     <section style={{
       position:'relative',
       overflow:'hidden',
-      background: dark ? PALETTE.indigo : PALETTE.white,
+      background: getSectionBackgroundTone(3, dark),
       ...globalNoiseTexture(dark),
       padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw 88px',
     }}>
-      {/* Subtle fade effect for smooth section transition */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: dark
-          ? 'linear-gradient(to bottom, rgba(31,34,36,0.35) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.2) 100%)'
-          : 'linear-gradient(to bottom, rgba(248,252,253,0.2) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.15) 100%)',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}/>
+      <div style={sectionFade('both', dark)}/>
       <div style={{ maxWidth: 1600, margin:'0 auto' }}>
       <div style={{ position:'relative', zIndex: 1 }}>
         <div data-rj-reveal style={{

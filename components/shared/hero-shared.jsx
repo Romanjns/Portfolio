@@ -41,21 +41,16 @@ function SectionPattern({ dark, accent, variant = 'grid', opacity = 1 }) {
     ? `rgba(248,252,253,${0.055 * opacity})`
     : `rgba(31,34,36,${0.055 * opacity})`;
   const accentLine = dark
-    ? `rgba(208,59,8,${0.11 * opacity})`
-    : `rgba(48,88,93,${0.11 * opacity})`;
-  const glow = dark
-    ? `rgba(208,59,8,${0.08 * opacity})`
-    : `rgba(48,88,93,${0.08 * opacity})`;
-
+    ? `rgba(48,88,93,${0.12 * opacity})`
+    : `rgba(48,88,93,${0.10 * opacity})`;
   const patterns = {
     hero: {
       backgroundImage: `
         linear-gradient(90deg, ${baseLine} 1px, transparent 1px),
         linear-gradient(${baseLine} 1px, transparent 1px),
-        radial-gradient(circle at 18% 22%, ${glow}, transparent 34%),
-        radial-gradient(circle at 78% 68%, ${accentLine}, transparent 30%)
+        linear-gradient(135deg, transparent 0%, ${accentLine} 52%, transparent 100%)
       `,
-      backgroundSize: '42px 42px, 42px 42px, 100% 100%, 100% 100%',
+      backgroundSize: '42px 42px, 42px 42px, 100% 100%',
     },
     grid: {
       backgroundImage: `
@@ -89,39 +84,37 @@ function sectionSurface(dark, strength = 1) {
   // Cleaner, more minimal surface — reduces backdrop blur for modern premium look
   return {
     background: dark
-      ? `rgba(31,34,36,${0.02 * strength})`  // Nearly transparent
-      : `rgba(248,252,253,${0.01 * strength})`,  // Nearly transparent
-    backdropFilter: strength > 0.8 ? 'blur(6px)' : 'blur(3px)',
-    WebkitBackdropFilter: strength > 0.8 ? 'blur(6px)' : 'blur(3px)',
+      ? `linear-gradient(180deg, rgba(38,45,46,${0.66 * strength}), rgba(31,34,36,${0.94 * strength}))`
+      : `linear-gradient(180deg, rgba(248,252,253,${0.96 * strength}), rgba(244,249,249,${0.92 * strength}))`,
+    backdropFilter: strength > 0.8 ? 'blur(10px)' : 'blur(6px)',
+    WebkitBackdropFilter: strength > 0.8 ? 'blur(10px)' : 'blur(6px)',
   };
 }
 
 // Alternating section backgrounds for visual separation without noise
 // index: 0 = first section, 1 = second, etc.
 function getSectionBackgroundTone(index, dark) {
-  // Subtle alternation: even sections slightly darker, odd sections slightly lighter
   if (dark) {
-    // Dark mode: very subtle variation
     return index % 2 === 0
-      ? PALETTE.indigo  // #1f2224
-      : 'rgba(31,34,36,1.02)';  // Imperceptibly lighter
-  } else {
-    // Light mode: more noticeable but still subtle
-    return index % 2 === 0
-      ? '#f8fcfd'  // Pure white (PALETTE.white)
-      : '#f5fafb';  // Very subtle warm gray-white
+      ? 'linear-gradient(180deg, #1f2224 0%, #202729 100%)'
+      : 'linear-gradient(180deg, #252b2d 0%, #202426 100%)';
   }
+
+  return index % 2 === 0
+    ? 'linear-gradient(180deg, #f8fcfd 0%, #f3f8f8 100%)'
+    : 'linear-gradient(180deg, #eef7f5 0%, #e6f0ed 100%)';
 }
 
 // Subtle fade-out at section top and bottom for smooth transitions
 function sectionFade(position = 'both', dark = false) {
-  const fadeColor = dark ? 'rgba(31,34,36' : 'rgba(248,252,253';
+  const edge = dark ? 'rgba(16,18,20,0.20)' : 'rgba(31,34,36,0.055)';
+  const edgeStrong = dark ? 'rgba(16,18,20,0.34)' : 'rgba(31,34,36,0.075)';
   const gradients = {
-    top: `linear-gradient(to bottom, ${fadeColor},1), ${fadeColor},0)), transparent 60%)`,
-    bottom: `linear-gradient(to top, ${fadeColor},1), ${fadeColor},0)), transparent 60%)`,
+    top: `linear-gradient(to bottom, ${edgeStrong}, transparent 56px)`,
+    bottom: `linear-gradient(to top, ${edge}, transparent 56px)`,
     both: `
-      linear-gradient(to bottom, ${fadeColor},0.8), ${fadeColor},0)), transparent 45%),
-      linear-gradient(to top, ${fadeColor},0.8), ${fadeColor},0)), transparent 45%)
+      linear-gradient(to bottom, ${edgeStrong}, transparent 64px),
+      linear-gradient(to top, ${edge}, transparent 64px)
     `,
   };
   return {
@@ -129,7 +122,7 @@ function sectionFade(position = 'both', dark = false) {
     position: 'absolute',
     inset: 0,
     pointerEvents: 'none',
-    zIndex: 2,
+    zIndex: 0,
   };
 }
 
@@ -138,7 +131,7 @@ function globalNoiseTexture(dark = false) {
   return {
     backgroundImage: dark 
       ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' seed='2'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%231f2224' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E\")"
-      : "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' seed='2'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23f8fcfd' filter='url(%23n)' opacity='0.01'/%3E%3C/svg%3E\")",
+      : "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' seed='2'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23f4f7f8' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E\")",
     backgroundSize: '240px 240px',
     backgroundAttachment: 'fixed',
   };
@@ -245,85 +238,12 @@ function MatrixRain({ color = PALETTE.blue, opacity = 0.55, density = 1, dark = 
   return <canvas ref={ref} style={{ position:'absolute', inset:0, width:'100%', height:'100%', display:'block' }} />;
 }
 
-// ── Mesh / gradient background ───────────────────────────────
-// Interactive: orbs drift slowly, plus parallax-follow the cursor.
-// Static animation config lives outside the component so the rAF loop
-// closes over a stable reference — no React re-renders on each frame.
-const MESH_ORB_ANIM = [
-  { px: 8,  py: 6,  sx: 0.35, sy: 0.28, ph: 0 },
-  { px: 14, py: 10, sx: 0.27, sy: 0.32, ph: 0 },
-  { px: 20, py: 14, sx: 0.22, sy: 0.24, ph: 1 },
-];
 
-function MeshBG({ accent, dark }) {
-  const base = dark ? PALETTE.indigo : PALETTE.white;
-  const containerRef = React.useRef(null);
-  const orbRefs = React.useRef([]);
-  const pos = React.useRef({ x: 0, y: 0, tx: 0, ty: 0 });
-
-  React.useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const onMove = (e) => {
-      const r = el.getBoundingClientRect();
-      pos.current.tx = ((e.clientX - r.left) / r.width  - 0.5) * 2;
-      pos.current.ty = ((e.clientY - r.top)  / r.height - 0.5) * 2;
-    };
-    window.addEventListener('pointermove', onMove, { passive: true });
-    let raf = 0;
-    const t0 = performance.now();
-    const loop = (now) => {
-      const t = (now - t0) * 0.001;
-      pos.current.x += (pos.current.tx - pos.current.x) * 0.06;
-      pos.current.y += (pos.current.ty - pos.current.y) * 0.06;
-      MESH_ORB_ANIM.forEach((o, i) => {
-        const orbEl = orbRefs.current[i];
-        if (!orbEl) return;
-        const dx = Math.sin(t * o.sx + o.ph) * 6;
-        const dy = Math.cos(t * o.sy + o.ph) * 5;
-        orbEl.style.transform = `translate(calc(${dx + pos.current.x * o.px}%), calc(${dy + pos.current.y * o.py}%))`;
-      });
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('pointermove', onMove); };
-  }, []);
-
-  const orbs = [
-    { hue: accent,         size: 620, bx: 18, by: 25, a: dark ? 0.75 : 0.55 },
-    { hue: PALETTE.blueDk, size: 540, bx: 82, by: 72, a: dark ? 0.70 : 0.50 },
-    { hue: PALETTE.blueDk, size: 460, bx: 58, by: 12, a: dark ? 0.60 : 0.38 },
-  ];
-
-  return (
-    <div ref={containerRef} style={{ position:'absolute', inset:0, background: base, overflow:'hidden' }}>
-      {orbs.map((o, i) => (
-        <div key={i} ref={el => { orbRefs.current[i] = el; }} style={{
-          position:'absolute',
-          width: o.size, height: o.size,
-          left: `calc(${o.bx}% - ${o.size/2}px)`,
-          top:  `calc(${o.by}% - ${o.size/2}px)`,
-          borderRadius:'50%',
-          background: `radial-gradient(circle, ${o.hue} 0%, transparent 62%)`,
-          filter:'blur(48px)',
-          opacity: o.a,
-          pointerEvents:'none',
-          willChange:'transform',
-        }}/>
-      ))}
-      {dark && <div style={{
-        position:'absolute', inset:0, opacity: 0.25, mixBlendMode:'overlay',
-        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E\")",
-        pointerEvents:'none',
-      }}/>}
-    </div>
-  );
-}
 
 // ── Background dispatcher ────────────────────────────────────
 // Simplified: only use matrix for hero, keep backgrounds clean elsewhere
 function Background({ bg, accent, dark }) {
-  const base = dark ? PALETTE.indigo : PALETTE.white;
+  const base = dark ? PALETTE.indigo : '#f8fcfd';
   return (
     <div style={{ position:'absolute', inset:0, overflow:'hidden', background: base }}>
       {bg === 'matrix' && <MatrixRain color={accent} opacity={dark ? 0.75 : 0.42} dark={dark} />}
@@ -331,8 +251,8 @@ function Background({ bg, accent, dark }) {
       <div style={{
         position:'absolute', inset:0,
         background: dark
-          ? 'radial-gradient(ellipse 90% 60% at 50% 50%, transparent 40%, rgba(31,34,36,0.5) 100%)'
-          : 'radial-gradient(ellipse 90% 60% at 50% 50%, transparent 50%, rgba(248,252,253,0.05) 100%)',
+          ? 'linear-gradient(180deg, rgba(255,255,255,0.018), rgba(0,0,0,0.10))'
+          : 'linear-gradient(180deg, rgba(48,88,93,0.035), rgba(208,59,8,0.025))',
         pointerEvents:'none',
       }}/>
     </div>
@@ -487,6 +407,38 @@ if (typeof document !== 'undefined' && !document.getElementById('rj-keyframes'))
     [data-rj-reveal].rj-visible {
       opacity: 1;
       transform: translate(0, 0);
+    }
+    .rj-primary-action,
+    .rj-secondary-action {
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform, filter;
+    }
+    .rj-primary-action::before {
+      content: "";
+      position: absolute;
+      inset: -1px auto -1px -55%;
+      width: 42%;
+      background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.26) 45%, rgba(255,255,255,0.58) 50%, rgba(255,255,255,0.20) 56%, transparent 100%);
+      transform: skewX(-18deg) translateX(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .rj-primary-action:hover::before {
+      opacity: 1;
+      animation: rjButtonShine 760ms cubic-bezier(.2,.8,.2,1);
+    }
+    @keyframes rjButtonShine {
+      from { transform: skewX(-18deg) translateX(0); }
+      to { transform: skewX(-18deg) translateX(360%); }
+    }
+    .rj-primary-action:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.06);
+    }
+    .rj-secondary-action:hover {
+      transform: translateY(-2px);
     }
     @media (prefers-reduced-motion: reduce) {
       .rj-fadeup {

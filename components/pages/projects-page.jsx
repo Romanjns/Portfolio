@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { PALETTE, useViewport } from '../shared/hero-shared.jsx';
+import { PALETTE, useViewport, globalNoiseTexture, getSectionBackgroundTone } from '../shared/hero-shared.jsx';
 import { PageShell } from '../shared/shared-chrome.jsx';
 import { useTweaks } from '../shared/use-tweaks.jsx';
 
@@ -108,8 +108,10 @@ function ProjectCarousel({ tw }) {
   const { dark, accent } = tw;
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const subtle = dark ? 'rgba(248,252,253,0.70)' : 'rgba(31,34,36,0.75)';
-  const border = dark ? 'rgba(208,59,8,0.12)' : 'rgba(48,88,93,0.12)';
-  const cardBg = dark ? 'rgba(31,34,36,0.75)' : 'rgba(248,252,253,0.80)';
+  const border = dark ? 'rgba(248,252,253,0.12)' : 'rgba(31,34,36,0.13)';
+  const cardBg = dark
+    ? 'linear-gradient(180deg, rgba(39,48,49,0.94), rgba(31,34,36,0.98))'
+    : 'linear-gradient(180deg, rgba(249,251,248,0.98), rgba(237,245,243,0.96))';
 
   const [current, setCurrent] = React.useState(() => {
     const params = new URLSearchParams(window.location.search);
@@ -176,6 +178,9 @@ function ProjectCarousel({ tw }) {
           background: cardBg,
           backdropFilter: 'blur(14px) saturate(140%)',
           WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+          boxShadow: dark
+            ? '0 28px 70px -42px rgba(0,0,0,0.82), 0 1px 0 rgba(255,255,255,0.04) inset'
+            : '0 28px 70px -42px rgba(31,34,36,0.32), 0 1px 0 rgba(255,255,255,0.90) inset',
           overflow: 'hidden',
           animation: `rjCarousel${direction === 'next' ? 'SlideLeft' : 'SlideRight'} ${animDuration}ms ${easeOut} forwards`,
           display: 'flex',
@@ -277,12 +282,13 @@ function ProjectCarousel({ tw }) {
         }}>
           <button
             onClick={goPrev}
+            className="rj-secondary-action"
             style={{
               width: 44,
               height: 44,
               borderRadius: 8,
               border: `1px solid ${border}`,
-              background: 'transparent',
+              background: dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.62)',
               color: fg,
               cursor: 'pointer',
               display: 'flex',
@@ -306,12 +312,13 @@ function ProjectCarousel({ tw }) {
           </button>
           <button
             onClick={goNext}
+            className="rj-secondary-action"
             style={{
               width: 44,
               height: 44,
               borderRadius: 8,
               border: `1px solid ${border}`,
-              background: 'transparent',
+              background: dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.62)',
               color: fg,
               cursor: 'pointer',
               display: 'flex',
@@ -508,12 +515,13 @@ function ProjectCarousel({ tw }) {
             href={project.github}
             target="_blank"
             rel="noopener noreferrer"
+            className="rj-secondary-action"
             style={{
               padding: '11px 18px',
               justifyContent: 'center',
               borderRadius: 8,
               border: `1px solid ${border}`,
-              background: 'transparent',
+              background: dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.72)',
               color: fg,
               fontSize: 13,
               fontWeight: 500,
@@ -543,12 +551,13 @@ function ProjectCarousel({ tw }) {
             href={project.demo}
             target="_blank"
             rel="noopener noreferrer"
+            className="rj-secondary-action"
             style={{
               padding: '11px 18px',
               justifyContent: 'center',
               borderRadius: 8,
               border: `1px solid ${border}`,
-              background: 'transparent',
+              background: dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.72)',
               color: fg,
               fontSize: 13,
               fontWeight: 500,
@@ -594,10 +603,10 @@ function ProjectsPage() {
         position:'relative',
         overflow:'hidden',
         padding: isMobile ? '36px 5vw 36px' : isTablet ? '48px 5vw 44px' : '40px 6vw 60px',
-        maxWidth: 1400,
-        margin: '0 auto',
+        background: getSectionBackgroundTone(0, dark),
+        ...globalNoiseTexture(dark),
       }}>
-        <div style={{ position:'relative', zIndex: 1 }}>
+        <div style={{ position:'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto' }}>
         <div className="rj-fadeup" style={{
           fontFamily: '"JetBrains Mono", monospace',
           fontSize: 11,

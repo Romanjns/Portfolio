@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import * as d3 from 'd3';
 import * as topo from 'topojson-client';
-import { PALETTE, useViewport, sectionSurface, SectionPattern, globalNoiseTexture } from '../shared/hero-shared.jsx';
+import { PALETTE, useViewport, sectionSurface, SectionPattern, globalNoiseTexture, getSectionBackgroundTone, sectionFade } from '../shared/hero-shared.jsx';
 import { PageShell } from '../shared/shared-chrome.jsx';
 import { useTweaks } from '../shared/use-tweaks.jsx';
 import { SectionHeader, Experience } from '../shared/landing-sections.jsx';
@@ -131,7 +131,7 @@ function CVSection({ tw }) {
             gap: 12,
             alignItems: isMobile ? 'stretch' : 'center',
           }}>
-            <a href={CV_FILE} target="_blank" rel="noopener noreferrer" style={{
+            <a href={CV_FILE} target="_blank" rel="noopener noreferrer" className="rj-primary-action" style={{
               display:'inline-flex',
               alignItems:'center',
               justifyContent:'center',
@@ -143,8 +143,10 @@ function CVSection({ tw }) {
               textDecoration:'none',
               fontSize: 14,
               fontWeight: 700,
+              boxShadow:`0 8px 0 ${PALETTE.blueDk}33, 0 18px 32px -18px ${accent}cc`,
+              transition:'transform .18s ease, filter .18s ease',
             }}>Open CV</a>
-            <a href={CV_FILE} download style={{
+            <a href={CV_FILE} download className="rj-secondary-action" style={{
               display:'inline-flex',
               alignItems:'center',
               justifyContent:'center',
@@ -152,10 +154,12 @@ function CVSection({ tw }) {
               padding:'13px 20px',
               borderRadius: 8,
               border:`1px solid ${border}`,
+              background: dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.46)',
               color: fg,
               textDecoration:'none',
               fontSize: 14,
               fontWeight: 600,
+              transition:'transform .18s ease, background .18s ease, border-color .18s ease',
             }}>Download PDF</a>
           </div>
           <div style={{ marginTop: 18, color: subtle, fontSize: 14, lineHeight: 1.6 }}>
@@ -170,31 +174,54 @@ function CVSection({ tw }) {
 
 function GlobeVisual({ accent, dark }) {
   const canvasRef = React.useRef(null);
-  const stateRef  = React.useRef({ raf: 0, land: null, lon: 96, dragging: false, lastX: 0, smoothing: false });
+  const stateRef  = React.useRef({ raf: 0, land: null, lon: 96, dragging: false, lastX: 0, lastT: 0, velocity: 0, smoothing: false });
 
-  const resetToUSA = () => { stateRef.current.smoothing = true; };
+  const resetToUSA = () => {
+    stateRef.current.velocity = 0;
+    stateRef.current.smoothing = true;
+  };
 
   const onMouseDown = (e) => {
-    stateRef.current.dragging = true;
-    stateRef.current.lastX = e.clientX;
+    const s = stateRef.current;
+    s.dragging = true;
+    s.smoothing = false;
+    s.velocity = 0;
+    s.lastX = e.clientX;
+    s.lastT = performance.now();
     e.preventDefault();
   };
   const onMouseMove = (e) => {
     const s = stateRef.current;
     if (!s.dragging) return;
-    s.lon += (e.clientX - s.lastX) * 0.5;
+    const now = performance.now();
+    const dx = e.clientX - s.lastX;
+    const dt = Math.max(16, now - s.lastT);
+    const delta = dx * 0.5;
+    s.lon += delta;
+    s.velocity = delta / dt * 16.67;
     s.lastX = e.clientX;
+    s.lastT = now;
   };
   const onDragEnd = () => { stateRef.current.dragging = false; };
   const onTouchStart = (e) => {
-    stateRef.current.dragging = true;
-    stateRef.current.lastX = e.touches[0].clientX;
+    const s = stateRef.current;
+    s.dragging = true;
+    s.smoothing = false;
+    s.velocity = 0;
+    s.lastX = e.touches[0].clientX;
+    s.lastT = performance.now();
   };
   const onTouchMove = (e) => {
     const s = stateRef.current;
     if (!s.dragging) return;
-    s.lon += (e.touches[0].clientX - s.lastX) * 0.5;
+    const now = performance.now();
+    const dx = e.touches[0].clientX - s.lastX;
+    const dt = Math.max(16, now - s.lastT);
+    const delta = dx * 0.5;
+    s.lon += delta;
+    s.velocity = delta / dt * 16.67;
     s.lastX = e.touches[0].clientX;
+    s.lastT = now;
   };
 
   React.useEffect(() => {
@@ -232,9 +259,15 @@ function GlobeVisual({ accent, dark }) {
       if (s.smoothing) {
         const diff = ((96 - s.lon) % 360 + 540) % 360 - 180;
         s.lon += diff * 0.08;
+        s.velocity *= 0.82;
         if (Math.abs(diff) < 0.3) { s.lon = 96; s.smoothing = false; }
       } else if (!s.dragging) {
-        s.lon -= 0.04;
+        s.lon += s.velocity;
+        s.velocity *= 0.94;
+        if (Math.abs(s.velocity) < 0.035) {
+          s.velocity = 0;
+          s.lon -= 0.04;
+        }
       }
       proj.rotate([s.lon, -28, 0]);
       ctx.clearRect(0, 0, W, H);
@@ -352,8 +385,10 @@ function WhatsNext({ tw }) {
   const { dark, accent } = tw;
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const subtle = dark ? 'rgba(248,252,253,0.66)' : 'rgba(31,34,36,0.72)';
-  const border = dark ? 'rgba(248,252,253,0.10)' : 'rgba(31,34,36,0.12)';
-  const cardBg = dark ? 'rgba(248,252,253,0.035)' : 'rgba(248,252,253,0.62)';
+  const border = dark ? 'rgba(248,252,253,0.11)' : 'rgba(48,88,93,0.20)';
+  const cardBg = dark
+    ? 'linear-gradient(180deg, rgba(42,49,50,0.78), rgba(31,34,36,0.94))'
+    : 'linear-gradient(180deg, rgba(250,252,247,0.98), rgba(238,246,244,0.96))';
 
   const items = [
     ['Cloud security internship', 'Work with a team that ships secure infrastructure in production.'],
@@ -366,19 +401,10 @@ function WhatsNext({ tw }) {
       position:'relative',
       overflow:'hidden',
       padding: isMobile ? '56px 5vw 80px' : isTablet ? '72px 5vw 92px' : '84px 6vw 110px',
-      background: dark ? PALETTE.indigo : PALETTE.white,
+      background: getSectionBackgroundTone(1, dark),
       ...globalNoiseTexture(dark),
     }}>
-      {/* Subtle fade effect for smooth section transition */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: dark
-          ? 'linear-gradient(to bottom, rgba(31,34,36,0.35) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.25) 100%)'
-          : 'linear-gradient(to bottom, rgba(248,252,253,0.2) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.15) 100%)',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}/>
+      <div style={sectionFade('top', dark)}/>
       <div style={{ maxWidth: 1400, margin:'0 auto' }}>
       <div style={{ position:'relative', zIndex: 1 }}>
         <div data-rj-reveal>
@@ -400,20 +426,13 @@ function WhatsNext({ tw }) {
           alignItems:'center',
           borderRadius: 12,
           padding: isMobile ? '28px 22px' : isTablet ? '32px' : '36px 44px',
+          border: `1px solid ${border}`,
           background: cardBg,
-          boxShadow: dark ? '0 18px 45px -28px rgba(0,0,0,0.45)' : '0 18px 45px -28px rgba(31,34,36,0.10)',
+          boxShadow: dark ? '0 18px 45px -28px rgba(0,0,0,0.55)' : '0 18px 45px -28px rgba(48,88,93,0.22)',
           marginBottom: 14,
           position:'relative',
           overflow:'hidden',
         }}>
-          {/* Ambient glow */}
-          <div style={{
-            position:'absolute', top:-80, right: isMobile ? -80 : 60,
-            width:260, height:260, borderRadius:'50%',
-            background: accent, opacity: dark?0.07:0.09,
-            filter:'blur(70px)', pointerEvents:'none',
-          }}/>
-
           <div style={{ position:'relative', zIndex:1 }}>
             <div style={{
               fontFamily:'"JetBrains Mono", monospace',
@@ -463,8 +482,9 @@ function WhatsNext({ tw }) {
               '--rj-delay': `${150 + i * 70}ms`,
               borderRadius: 8,
               padding:'22px',
+              border: `1px solid ${border}`,
               background: cardBg,
-              boxShadow: dark ? '0 12px 32px -24px rgba(0,0,0,0.35)' : '0 12px 32px -24px rgba(31,34,36,0.08)',
+              boxShadow: dark ? '0 12px 32px -24px rgba(0,0,0,0.42)' : '0 12px 32px -24px rgba(48,88,93,0.20)',
             }}>
               <div style={{
                 fontFamily:'"JetBrains Mono", monospace',
@@ -593,12 +613,13 @@ function AboutPage() {
               </div>
             ))}
 
-            <a href="contact.html" style={{
+            <a href="contact.html" className="rj-primary-action" style={{
               display:'block', marginTop: 22, textAlign:'center',
               padding:'12px 20px', borderRadius: 8,
               background: accent, color: PALETTE.white,
               fontSize: 14, fontWeight: 600, textDecoration:'none',
-              boxShadow:`0 10px 28px -8px ${accent}cc`,
+              boxShadow:`0 9px 0 ${PALETTE.blueDk}33, 0 18px 32px -18px ${accent}cc`,
+              transition:'transform .18s ease, box-shadow .18s ease, filter .18s ease',
             }}>Get in touch →</a>
           </div>
         </div>
