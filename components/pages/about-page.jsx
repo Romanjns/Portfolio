@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import * as d3 from 'd3';
 import * as topo from 'topojson-client';
-import { PALETTE, useViewport, sectionSurface, SectionPattern } from '../shared/hero-shared.jsx';
+import { PALETTE, useViewport, sectionSurface, SectionPattern, globalNoiseTexture } from '../shared/hero-shared.jsx';
 import { PageShell } from '../shared/shared-chrome.jsx';
 import { useTweaks } from '../shared/use-tweaks.jsx';
 import { SectionHeader, Experience } from '../shared/landing-sections.jsx';
@@ -23,10 +23,20 @@ function CVSection({ tw }) {
       position:'relative',
       overflow:'hidden',
       padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '92px 6vw',
-      ...sectionSurface(dark, 0.48),
+      background: dark ? PALETTE.indigo : PALETTE.white,
+      ...globalNoiseTexture(dark),
     }}>
+      {/* Subtle fade effect for smooth section transition */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: dark
+          ? 'linear-gradient(to bottom, rgba(31,34,36,0.4) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.3) 100%)'
+          : 'linear-gradient(to bottom, rgba(248,252,253,0.25) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.2) 100%)',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}/>
       <div style={{ maxWidth: 1400, margin:'0 auto' }}>
-      <SectionPattern dark={dark} accent={accent} variant="grid" opacity={0.28} />
       <div data-rj-reveal style={{
         position:'relative',
         zIndex: 1,
@@ -356,10 +366,20 @@ function WhatsNext({ tw }) {
       position:'relative',
       overflow:'hidden',
       padding: isMobile ? '56px 5vw 80px' : isTablet ? '72px 5vw 92px' : '84px 6vw 110px',
-      ...sectionSurface(dark, 0.36),
+      background: dark ? PALETTE.indigo : PALETTE.white,
+      ...globalNoiseTexture(dark),
     }}>
+      {/* Subtle fade effect for smooth section transition */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: dark
+          ? 'linear-gradient(to bottom, rgba(31,34,36,0.35) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.25) 100%)'
+          : 'linear-gradient(to bottom, rgba(248,252,253,0.2) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.15) 100%)',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}/>
       <div style={{ maxWidth: 1400, margin:'0 auto' }}>
-      <SectionPattern dark={dark} accent={accent} variant="diagonal" opacity={0.30} />
       <div style={{ position:'relative', zIndex: 1 }}>
         <div data-rj-reveal>
           <SectionHeader
@@ -485,12 +505,22 @@ function AboutPage() {
         position:'relative',
         overflow:'hidden',
         padding: isMobile ? '84px 5vw 40px' : isTablet ? '78px 5vw 44px' : '76px 6vw 36px',
-        ...sectionSurface(dark, 0.52),
+        background: dark ? PALETTE.indigo : PALETTE.white,
+        ...globalNoiseTexture(dark),
         borderTop:'none',
         borderBottom:'none',
       }}>
+        {/* Subtle fade effect for smooth section transition */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: dark
+            ? 'linear-gradient(to bottom, rgba(31,34,36,0.5) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.35) 100%)'
+            : 'linear-gradient(to bottom, rgba(248,252,253,0.3) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.2) 100%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}/>
         <div style={{ maxWidth: 1200, margin:'0 auto' }}>
-        <SectionPattern dark={dark} accent={accent} variant="hero" opacity={isMobile ? 0.32 : 0.44} />
         <div style={{ position:'relative', zIndex: 1 }}>
         <div className="rj-fadeup" style={{
           fontFamily:'"JetBrains Mono", monospace',

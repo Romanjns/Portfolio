@@ -439,7 +439,7 @@ function HeroSection({ tw }) {
       </div>
 
       {showTerminal && !isMobile && (
-        <div data-rj-reveal="right" style={{ position:'relative', zIndex: 1, minWidth: 0, alignSelf:'center', transform:'translateX(100px)', '--rj-delay': '120ms' }}>
+        <div data-rj-reveal="right" style={{ position:'relative', zIndex: 1, minWidth: 0, alignSelf:'center', transform: isTablet ? 'none' : 'translateX(100px)', '--rj-delay': '120ms' }}>
           <Terminal accent={accent} dark={dark} />
         </div>
       )}

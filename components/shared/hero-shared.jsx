@@ -86,12 +86,61 @@ function SectionPattern({ dark, accent, variant = 'grid', opacity = 1 }) {
 }
 
 function sectionSurface(dark, strength = 1) {
+  // Cleaner, more minimal surface — reduces backdrop blur for modern premium look
   return {
     background: dark
-      ? `rgba(31,34,36,${0.48 * strength})`
-      : `rgba(248,252,253,${0.66 * strength})`,
-    backdropFilter:'blur(10px) saturate(120%)',
-    WebkitBackdropFilter:'blur(10px) saturate(120%)',
+      ? `rgba(31,34,36,${0.02 * strength})`  // Nearly transparent
+      : `rgba(248,252,253,${0.01 * strength})`,  // Nearly transparent
+    backdropFilter: strength > 0.8 ? 'blur(6px)' : 'blur(3px)',
+    WebkitBackdropFilter: strength > 0.8 ? 'blur(6px)' : 'blur(3px)',
+  };
+}
+
+// Alternating section backgrounds for visual separation without noise
+// index: 0 = first section, 1 = second, etc.
+function getSectionBackgroundTone(index, dark) {
+  // Subtle alternation: even sections slightly darker, odd sections slightly lighter
+  if (dark) {
+    // Dark mode: very subtle variation
+    return index % 2 === 0
+      ? PALETTE.indigo  // #1f2224
+      : 'rgba(31,34,36,1.02)';  // Imperceptibly lighter
+  } else {
+    // Light mode: more noticeable but still subtle
+    return index % 2 === 0
+      ? '#f8fcfd'  // Pure white (PALETTE.white)
+      : '#f5fafb';  // Very subtle warm gray-white
+  }
+}
+
+// Subtle fade-out at section top and bottom for smooth transitions
+function sectionFade(position = 'both', dark = false) {
+  const fadeColor = dark ? 'rgba(31,34,36' : 'rgba(248,252,253';
+  const gradients = {
+    top: `linear-gradient(to bottom, ${fadeColor},1), ${fadeColor},0)), transparent 60%)`,
+    bottom: `linear-gradient(to top, ${fadeColor},1), ${fadeColor},0)), transparent 60%)`,
+    both: `
+      linear-gradient(to bottom, ${fadeColor},0.8), ${fadeColor},0)), transparent 45%),
+      linear-gradient(to top, ${fadeColor},0.8), ${fadeColor},0)), transparent 45%)
+    `,
+  };
+  return {
+    background: gradients[position],
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+    zIndex: 2,
+  };
+}
+
+// Ultra-subtle global noise texture for premium feel
+function globalNoiseTexture(dark = false) {
+  return {
+    backgroundImage: dark 
+      ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' seed='2'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%231f2224' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E\")"
+      : "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' seed='2'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='%23f8fcfd' filter='url(%23n)' opacity='0.01'/%3E%3C/svg%3E\")",
+    backgroundSize: '240px 240px',
+    backgroundAttachment: 'fixed',
   };
 }
 
@@ -272,18 +321,18 @@ function MeshBG({ accent, dark }) {
 }
 
 // ── Background dispatcher ────────────────────────────────────
+// Simplified: only use matrix for hero, keep backgrounds clean elsewhere
 function Background({ bg, accent, dark }) {
   const base = dark ? PALETTE.indigo : PALETTE.white;
   return (
     <div style={{ position:'absolute', inset:0, overflow:'hidden', background: base }}>
       {bg === 'matrix' && <MatrixRain color={accent} opacity={dark ? 0.75 : 0.42} dark={dark} />}
-      {bg === 'mesh'   && <MeshBG accent={accent} dark={dark} />}
-      {/* subtle vignette */}
+      {/* subtle vignette — minimal on light mode to preserve clarity */}
       <div style={{
         position:'absolute', inset:0,
         background: dark
-          ? 'radial-gradient(ellipse 90% 60% at 50% 50%, transparent 40%, rgba(31,34,36,0.65) 100%)'
-          : 'radial-gradient(ellipse 90% 60% at 50% 50%, transparent 40%, rgba(248,252,253,0.12) 100%)',
+          ? 'radial-gradient(ellipse 90% 60% at 50% 50%, transparent 40%, rgba(31,34,36,0.5) 100%)'
+          : 'radial-gradient(ellipse 90% 60% at 50% 50%, transparent 50%, rgba(248,252,253,0.05) 100%)',
         pointerEvents:'none',
       }}/>
     </div>
@@ -453,4 +502,4 @@ if (typeof document !== 'undefined' && !document.getElementById('rj-keyframes'))
   document.head.appendChild(s);
 }
 
-export { PALETTE, MESH_ORB_ANIM, useViewport, useScrollReveal, SectionPattern, sectionSurface, MatrixRain, Background, BigName };
+export { PALETTE, useViewport, useScrollReveal, SectionPattern, sectionSurface, sectionFade, globalNoiseTexture, getSectionBackgroundTone, MatrixRain, Background, BigName };

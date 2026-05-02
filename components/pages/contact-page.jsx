@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { PALETTE, useViewport, SectionPattern } from '../shared/hero-shared.jsx';
+import { PALETTE, useViewport, SectionPattern, globalNoiseTexture } from '../shared/hero-shared.jsx';
 import { PageShell } from '../shared/shared-chrome.jsx';
 import { useTweaks } from '../shared/use-tweaks.jsx';
 
@@ -100,8 +100,19 @@ function ContactPage() {
         position:'relative', overflow:'hidden',
         padding: isMobile ? '84px 5vw 84px' : isTablet ? '80px 5vw 80px' : '78px 6vw 78px',
         maxWidth: 1400, margin:'0 auto',
+        background: dark ? PALETTE.indigo : PALETTE.white,
+        ...globalNoiseTexture(dark),
       }}>
-        <SectionPattern dark={dark} accent={accent} variant="hero" opacity={isMobile ? 0.32 : 0.44} />
+        {/* Subtle fade effect for smooth section transition */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: dark
+            ? 'linear-gradient(to bottom, rgba(31,34,36,0.4) 0%, transparent 12%, transparent 88%, rgba(31,34,36,0.2) 100%)'
+            : 'linear-gradient(to bottom, rgba(248,252,253,0.25) 0%, transparent 12%, transparent 88%, rgba(248,252,253,0.15) 100%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}/>
         <div style={{ position:'relative', zIndex: 1 }}>
 
           <div className="rj-fadeup" style={{
