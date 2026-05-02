@@ -369,8 +369,8 @@ function HeroSection({ tw }) {
       <SectionPattern dark={dark} accent={accent} variant="hero" opacity={isMobile ? 0.42 : 0.62} />
       <div style={{
         display:'grid',
-        gridTemplateColumns: showTerminal && !isMobile && !isTablet ? 'minmax(0, 1.02fr) minmax(460px, 0.98fr)' : '1fr',
-        gap: isMobile ? 36 : isTablet ? 48 : 72,
+        gridTemplateColumns: showTerminal && !isMobile && !isTablet ? 'minmax(0, 0.88fr) minmax(520px, 1.12fr)' : '1fr',
+        gap: isMobile ? 36 : isTablet ? 48 : 56,
         alignItems:'center', alignContent:'center',
         padding: '0',
         maxWidth: 1600, margin: '0 auto',

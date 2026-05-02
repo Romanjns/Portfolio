@@ -43,8 +43,8 @@ function SectionHeader({ eyebrow, title, subtitle, accent, dark, align = 'left' 
   const s = document.createElement('style');
   s.id = 'rj-marquee-kf';
   s.textContent = `
-    @keyframes rjMarqueeL { from { transform:translateX(0); } to { transform:translateX(-50%); } }
-    @keyframes rjMarqueeR { from { transform:translateX(-50%); } to { transform:translateX(0); } }
+    @keyframes rjMarqueeL { from { transform:translateX(0); } to { transform:translateX(-33.333%); } }
+    @keyframes rjMarqueeR { from { transform:translateX(-33.333%); } to { transform:translateX(0); } }
   `;
   document.head.appendChild(s);
 })();
@@ -202,7 +202,7 @@ function SkillChip({ skill, accent, dark, onEnter, onLeave }) {
 }
 
 function MarqueeRow({ skills, direction, paused, accent, dark, onRowEnter, onRowLeave, onChipEnter, onChipLeave }) {
-  const items = [...skills, ...skills];
+  const items = [...skills, ...skills, ...skills];
   const dur   = Math.max(14, skills.length * 2.6) + 's';
   return (
     <div

@@ -172,37 +172,38 @@ function Nav({ current, dark, accent, onToggleDark }) {
   const border = dark ? 'rgba(248,252,253,0.10)' : 'rgba(31,34,36,0.10)';
 
   const headerSurface = {
-    background: hasScrolled
-      ? dark
-        ? 'rgba(31,34,36,0.72)'
-        : 'rgba(248,252,253,0.86)'
-      : 'transparent',
-    backdropFilter: hasScrolled ? 'blur(10px) saturate(120%)' : 'none',
-    WebkitBackdropFilter: hasScrolled ? 'blur(10px) saturate(120%)' : 'none',
-    transition: 'background 320ms ease, backdrop-filter 320ms ease, -webkit-backdrop-filter 320ms ease',
+    background: dark
+      ? (hasScrolled ? 'rgba(31,34,36,0.88)' : 'rgba(31,34,36,0.52)')
+      : (hasScrolled ? 'rgba(248,252,253,0.93)' : 'rgba(248,252,253,0.68)'),
+    backdropFilter: 'blur(14px) saturate(140%)',
+    WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+    transition: 'background 320ms ease',
   };
 
   const Menu = () => (
     <div style={{
       position:'fixed',
-      top: isMobile ? 72 : 80, // below header
+      top: isMobile ? 60 : 80,
       left: 0,
       right: 0,
       background: dark
-        ? 'rgba(31,34,36,0.96)'
+        ? 'rgba(31,34,36,0.92)'
         : 'rgba(248,252,253,0.94)',
-      backdropFilter: 'blur(18px) saturate(190%)',
-      WebkitBackdropFilter: 'blur(18px) saturate(190%)',
-      boxShadow: dark ? '0 2px 36px -4px rgba(0,0,0,0.55)' : '0 2px 28px -4px rgba(31,34,36,0.10)',
+      backdropFilter: 'blur(20px) saturate(160%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+      borderTop: `1px solid ${dark ? 'rgba(248,252,253,0.07)' : 'rgba(31,34,36,0.07)'}`,
+      borderBottom: `1px solid ${dark ? 'rgba(248,252,253,0.06)' : 'rgba(31,34,36,0.06)'}`,
+      boxShadow: dark ? '0 20px 56px -8px rgba(0,0,0,0.65)' : '0 20px 56px -8px rgba(31,34,36,0.12)',
       zIndex: 99,
-      padding: '20px 5vw',
-      animation: 'slideDown 0.3s ease-out',
+      padding: '8px 5vw 16px',
+      animation: 'slideDown 0.28s cubic-bezier(.2,.8,.2,1)',
       overflow:'hidden',
+      transform: 'translateZ(0)',
+      WebkitTransform: 'translateZ(0)',
     }}>
       <nav style={{
         display:'flex',
         flexDirection:'column',
-        gap: 20,
         fontFamily:'"Manrope", sans-serif',
         position:'relative',
         zIndex: 1,
@@ -216,14 +217,24 @@ function Nav({ current, dark, accent, onToggleDark }) {
               href={href}
               onClick={() => { setMenuOpen(false); rememberLinePosition(); }}
               style={{
+                display:'flex',
+                alignItems:'center',
+                gap: 14,
                 color: active ? fg : subtle,
                 textDecoration:'none',
-                fontSize: 18,
+                fontSize: 17,
                 fontWeight: active ? 600 : 500,
-                padding: '10px 0',
+                padding: '14px 0',
+                borderBottom: `1px solid ${dark ? 'rgba(248,252,253,0.05)' : 'rgba(31,34,36,0.05)'}`,
                 transition:'color .15s',
               }}
             >
+              <span style={{
+                width: 3, height: 18, borderRadius: 99,
+                background: active ? accent : 'transparent',
+                flexShrink: 0,
+                transition: 'background .15s',
+              }}/>
               {label}
             </a>
           );
@@ -240,6 +251,8 @@ function Nav({ current, dark, accent, onToggleDark }) {
       borderBottom: 'none',
       boxShadow: 'none',
       overflow:'hidden',
+      transform: 'translateZ(0)',
+      WebkitTransform: 'translateZ(0)',
     }}>
       <div style={{
         position:'relative',
@@ -466,6 +479,16 @@ function PageShell({ current, children, tw, setTw, headerOverlay = false }) {
   const onToggleDark = setTw ? () => setTw({ dark: !dark }) : undefined;
   const { isMobile } = useViewport();
   useScrollReveal();
+
+  React.useEffect(() => {
+    const color = dark ? '#1f2224' : '#f8fcfd';
+    document.documentElement.style.backgroundColor = color;
+    document.body.style.backgroundColor = color;
+    return () => {
+      document.documentElement.style.backgroundColor = '';
+      document.body.style.backgroundColor = '';
+    };
+  }, [dark]);
 
   return (
     <div style={{
