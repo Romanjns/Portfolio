@@ -388,12 +388,17 @@ function BigName({ text, effect = 'decrypt', accent, dark, seed = 0, startDelay 
   // decrypt / typewriter / default
   return (
     <h1 style={{...base, minHeight: base.lineHeight ? `${base.lineHeight}em` : 'auto' }}>
-      <span style={{ display: 'inline-block', minWidth: 0 }}>{display}</span>
-      {effect === 'typewriter' && phase === 0 && !pending && (
-        <span style={{ display:'inline-block', width:'0.12em', height:'0.9em',
-          background: accent, marginLeft:4, verticalAlign:'-0.05em',
-          animation:'rjBlink 0.9s steps(2) infinite' }}/>
-      )}
+      <span style={{ display: 'inline-block', position: 'relative', whiteSpace: 'nowrap', minWidth: 0 }}>
+        <span style={{ display: 'inline-block', minWidth: 0 }}>{display}</span>
+        {effect === 'typewriter' && phase === 0 && !pending && (
+          <span style={{
+            position: 'absolute', right: 0, top: 0,
+            width:'0.12em', height:'0.9em',
+            background: accent, marginLeft:1,
+            animation:'rjBlink 0.9s steps(2) infinite',
+          }}/>
+        )}
+      </span>
     </h1>
   );
 }

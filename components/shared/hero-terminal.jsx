@@ -25,7 +25,7 @@ const NEOFETCH_LINES = [
   { k: 'Contact', v: 'roman.janssens@mail' },
 ];
 
-function useTypewriter(lines, enabled = true, speed = 14) {
+function useTypewriter(lines, enabled = true, speed = 204) {
   const [state, setState] = React.useState({ row: 0, col: 0, done: !enabled });
   React.useEffect(() => {
     if (!enabled) { setState({ row: lines.length, col: 0, done: true }); return; }
@@ -85,8 +85,8 @@ function Terminal({ accent, dark }) {
   const lines = isMobile ? mobileLines : allLines;
   const { rendered, done } = useTypewriter(lines, true, isMobile ? 10 : 8);
 
-  const lineStyle = (line, i) => {
-    if (!line) return <div key={i}>&nbsp;</div>;
+  const lineStyle = (line, i, cursor = null) => {
+    if (!line) return <div key={i}>&nbsp;{cursor}</div>;
     if (line.startsWith('roman@portfolio ~ %')) {
       const [, cmd] = line.split('% ');
       return (
@@ -95,6 +95,7 @@ function Terminal({ accent, dark }) {
           <span style={{ color: terminalSubtle, margin:'0 6px' }}>~</span>
           <span style={{ color: fg, marginRight: 6 }}>%</span>
           <span style={{ color: fg }}>{cmd || ''}</span>
+          {cursor}
         </div>
       );
     }
@@ -110,11 +111,11 @@ function Terminal({ accent, dark }) {
             marginBottom: 3,
           }}>
             <span style={{ color: accent, fontWeight: 600 }}>{line.slice(0, colonIdx)}</span>
-            <span style={{ color: fg, minWidth: 0, overflowWrap:'anywhere' }}>{line.slice(colonIdx + 2)}</span>
+            <span style={{ color: fg, minWidth: 0, overflowWrap:'anywhere' }}>{line.slice(colonIdx + 2)}{cursor}</span>
           </div>
         );
       }
-      return <div key={i} style={{ color: terminalMuted }}>{line}</div>;
+      return <div key={i} style={{ color: terminalMuted }}>{line}{cursor}</div>;
     }
     const art = line.slice(0, 19);
     const rest = line.slice(19);
@@ -139,6 +140,7 @@ function Terminal({ accent, dark }) {
       <div key={i}>
         <span style={{ color: accent, opacity: 0.9 }}>{art}</span>
         {body && <>{'   '}{body}</>}
+        {cursor}
       </div>
     );
   };
@@ -181,21 +183,23 @@ function Terminal({ accent, dark }) {
         padding: isMobile ? '16px 15px 20px' : '20px 22px 24px',
         fontSize: isMobile ? 11 : 12.5, lineHeight: 1.65,
         whiteSpace: isMobile ? 'normal' : 'pre-wrap', fontVariantLigatures: 'none',
-        minHeight: isMobile ? 204 : 258,
-        overflowX: isMobile ? 'hidden' : 'auto',
+        minHeight: isMobile ? 220 : 280,
+        overflowX: 'hidden',
         maxWidth: '100%',
         minWidth: 0,
         overflowWrap: 'break-word',
         wordBreak: 'break-word',
       }}>
-        {rendered.map((l, i) => lineStyle(l, i))}
-        {!done && (
-          <span style={{
-            display:'inline-block', width: 7, height: 14,
-            background: accent, marginLeft: 1, verticalAlign:'-2px',
-            animation: 'rjBlink 0.9s steps(2) infinite',
-          }}/>
-        )}
+        {rendered.map((l, i) => {
+          const isLast = i === rendered.length - 1;
+          return lineStyle(l, i, (isLast && !done) ? (
+            <span style={{
+              display:'inline-block', width: 7, height: 14,
+              background: accent, marginLeft: 1, verticalAlign:'-2px',
+              animation: 'rjBlink 0.9s steps(2) infinite',
+            }}/>
+          ) : null);
+        })}
       </div>
     </div>
   );
@@ -435,7 +439,7 @@ function HeroSection({ tw }) {
       </div>
 
       {showTerminal && !isMobile && (
-        <div data-rj-reveal="right" style={{ position:'relative', zIndex: 1, minWidth: 0, alignSelf:'center', '--rj-delay': '120ms' }}>
+        <div data-rj-reveal="right" style={{ position:'relative', zIndex: 1, minWidth: 0, alignSelf:'center', transform:'translateX(100px)', '--rj-delay': '120ms' }}>
           <Terminal accent={accent} dark={dark} />
         </div>
       )}
