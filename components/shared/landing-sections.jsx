@@ -50,58 +50,50 @@ function SectionHeader({ eyebrow, title, subtitle, accent, dark, align = 'left' 
 })();
 
 const SKILL_GROUPS = [
-  { title:'Cloud',       items:['AWS','Azure','Terraform','Docker','Kubernetes','CloudFormation'] },
-  { title:'Security',    items:['Burp Suite','Wireshark','Nmap','Metasploit','OWASP','MITRE ATT&CK'] },
-  { title:'Languages',   items:['Python','Bash','Go','TypeScript','SQL','PowerShell'] },
-  { title:'Tooling',     items:['Linux','Git','CI/CD','Ansible','Grafana','Splunk'] },
+  { title:'Cloud',       items:['Kubernetes','Docker','Terraform','Ansible','NGINX','CrowdSec'] },
+  { title:'Security',    items:['Burp Suite','OWASP ZAP','OWASP WSTG','CVSS','CIS Controls','CrowdSec'] },
+  { title:'Languages',   items:['PHP','SQL','Python','PowerShell','Bash','JavaScript'] },
+  { title:'Tooling',     items:['Grocy API','Twilio API','MQTT','ThingSpeak','Git','Scrum'] },
 ];
 
 const SKILLS_ALL = [
-  { name:'AWS',              cat:'Cloud',      projects:['01','04'] },
-  { name:'Azure',            cat:'Cloud',      projects:['04'] },
-  { name:'Terraform',        cat:'Cloud',      projects:['01','04'] },
-  { name:'Docker',           cat:'Cloud',      projects:[] },
-  { name:'Kubernetes',       cat:'Cloud',      projects:['04'] },
-  { name:'CloudFormation',   cat:'Cloud',      projects:['01'] },
-  { name:'Lambda',           cat:'Cloud',      projects:['01'] },
-  { name:'CloudWatch',       cat:'Cloud',      projects:['01'] },
-  { name:'IAM',              cat:'Cloud',      projects:['01','04'] },
-  { name:'S3',               cat:'Cloud',      projects:['01'] },
+  { name:'Kubernetes',       cat:'Cloud',      projects:['01'] },
+  { name:'Docker',           cat:'Cloud',      projects:['01'] },
+  { name:'Terraform',        cat:'Cloud',      projects:['01'] },
+  { name:'Ansible',          cat:'Cloud',      projects:['01'] },
+  { name:'NGINX',            cat:'Cloud',      projects:['01'] },
+  { name:'MySQL',            cat:'Cloud',      projects:['01'] },
+  { name:'CrowdSec',         cat:'Security',   projects:['01'] },
+  { name:'CIS Controls',     cat:'Security',   projects:['01'] },
   { name:'Burp Suite',       cat:'Security',   projects:['02'] },
-  { name:'Wireshark',        cat:'Security',   projects:['03'] },
-  { name:'Nmap',             cat:'Security',   projects:['05'] },
-  { name:'Metasploit',       cat:'Security',   projects:['02'] },
+  { name:'OWASP ZAP',        cat:'Security',   projects:['02'] },
+  { name:'CVSS',             cat:'Security',   projects:['02'] },
   { name:'OWASP',            cat:'Security',   projects:['02'] },
-  { name:'MITRE ATT&CK',cat:'Security',   projects:[] },
-  { name:'Wazuh',            cat:'Security',   projects:['03'] },
-  { name:'Splunk',           cat:'Security',   projects:['06'] },
-  { name:'Kali Linux',       cat:'Security',   projects:['02','05'] },
-  { name:'OpenVAS',          cat:'Security',   projects:[] },
-  { name:'pfSense',          cat:'Networking', projects:['03'] },
-  { name:'VLANs',            cat:'Networking', projects:['03'] },
-  { name:'WireGuard',        cat:'Networking', projects:[] },
+  { name:'OWASP WSTG',       cat:'Security',   projects:['02'] },
+  { name:'XSS Testing',      cat:'Security',   projects:['02'] },
+  { name:'CSRF Testing',     cat:'Security',   projects:['02'] },
+  { name:'Grocy API',        cat:'Networking', projects:['03'] },
+  { name:'Twilio API',       cat:'Networking', projects:['03'] },
+  { name:'MQTT',             cat:'Networking', projects:['04'] },
   { name:'DNS',              cat:'Networking', projects:[] },
   { name:'Subnetting',       cat:'Networking', projects:[] },
-  { name:'Zero-trust',       cat:'Networking', projects:['04'] },
-  { name:'IPsec',            cat:'Networking', projects:[] },
-  { name:'BGP/OSPF',         cat:'Networking', projects:[] },
-  { name:'Linux',            cat:'Systems',    projects:['03','05'] },
-  { name:'Proxmox',          cat:'Systems',    projects:['03'] },
-  { name:'Ansible',          cat:'Systems',    projects:[] },
-  { name:'Grafana',          cat:'Systems',    projects:['03'] },
+  { name:'API Integration',  cat:'Networking', projects:['01','03'] },
+  { name:'Barcode Scanning', cat:'Systems',    projects:['03'] },
+  { name:'OrangePi',         cat:'Systems',    projects:['04'] },
+  { name:'Raspberry Pi Pico',cat:'Systems',    projects:['04'] },
+  { name:'BMP280 Sensor',    cat:'Systems',    projects:['04'] },
+  { name:'PWM Control',      cat:'Systems',    projects:['04'] },
+  { name:'ThingSpeak',       cat:'Systems',    projects:['04'] },
   { name:'PowerShell',       cat:'Systems',    projects:[] },
-  { name:'Active Directory', cat:'Systems',    projects:[] },
-  { name:'Nginx',            cat:'Systems',    projects:[] },
-  { name:'Bash',             cat:'Systems',    projects:['05'] },
-  { name:'Python',           cat:'Dev',        projects:['01','05'] },
-  { name:'Go',               cat:'Dev',        projects:['05'] },
-  { name:'TypeScript',       cat:'Dev',        projects:[] },
-  { name:'SQL',              cat:'Dev',        projects:[] },
+  { name:'Linux',            cat:'Systems',    projects:['01'] },
+  { name:'PHP',              cat:'Dev',        projects:['01'] },
+  { name:'SQL',              cat:'Dev',        projects:['01'] },
   { name:'Git',              cat:'Dev',        projects:[] },
-  { name:'CI/CD',            cat:'Dev',        projects:['04'] },
-  { name:'GitHub Actions',   cat:'Dev',        projects:['04'] },
-  { name:'Checkov',          cat:'Dev',        projects:['04'] },
-  { name:'tfsec',            cat:'Dev',        projects:['04'] },
+  { name:'Scrum',            cat:'Dev',        projects:['01','03'] },
+  { name:'Agile',            cat:'Dev',        projects:['01','03'] },
+  { name:'Documentation',    cat:'Dev',        projects:['02','03','04'] },
+  { name:'Testing',          cat:'Dev',        projects:['02','03'] },
+  { name:'Python',           cat:'Dev',        projects:[] },
 ];
 
 const SKILL_CATS = ['All','Cloud','Security','Networking','Systems','Dev'];
@@ -289,12 +281,12 @@ function SkillsMarquee({ tw }) {
     }}>
       {getSectionTopAccent(2, dark) && <div style={getSectionTopAccent(2, dark)} />}
       <div style={sectionFade('top', dark)}/>
-      {/* Header + filter — padded */}
+      {/* Header + filter - padded */}
       <div data-rj-reveal style={{ position:'relative', zIndex: 1, padding: isMobile ? '0 5vw' : isTablet ? '0 5vw' : '0 6vw', maxWidth: 1600, margin:'0 auto', marginBottom: isMobile ? 32 : 44 }}>
         <SectionHeader
           eyebrow="02 / Skills"
           title="Tools I reach for."
-          subtitle="Opinionated stack. Cloud-native and security-first — with enough breadth to ship end-to-end."
+          subtitle="Practical tools for secure hosting, application testing, API work, IoT systems, and clear documentation."
           accent={accent} dark={dark}
         />
         {/* Filter bar */}
@@ -377,40 +369,40 @@ function SkillsGrid({ tw }) { return <SkillsMarquee tw={tw} />; }
 // ── Featured Projects (preview on landing) ────────────────────
 const PROJECTS = [
   {
-    id:'01', tag:'CLOUD · IAC',
-    title:'Self-healing AWS VPC with Terraform',
-    body:'Multi-AZ VPC, auto-scaling app tier, CloudWatch → Lambda remediation loops. ~40% cost drop over baseline.',
-    stack:['AWS','Terraform','Lambda','Python'],
+    id:'01', tag:'SECURITY / CLOUD',
+    title:'Thomas Minder Secure Hosting Platform',
+    body:'Work in progress secure hosting platform for PHP apps with Kubernetes, automated deployment, DNS setup, monitoring, and CIS-based security design.',
+    stack:['Kubernetes','Docker','Terraform','CrowdSec'],
   },
   {
-    id:'02', tag:'SECURITY · RESEARCH',
-    title:'Web app pentest writeups',
-    body:'Documented 12 engagements on intentionally vulnerable targets. IDOR, SSRF, auth flaws, chained exploits.',
-    stack:['Burp','OWASP','HTB'],
+    id:'02', tag:'APP SECURITY',
+    title:'Shopmore E-commerce Security Check',
+    body:'Individual penetration test on a vulnerable e-commerce app, including XSS, CSRF, admin access issues, clickjacking, CVSS scoring, and remediation advice.',
+    stack:['Burp Suite','OWASP ZAP','CVSS'],
   },
   {
-    id:'03', tag:'HOMELAB · NET',
-    title:'Segmented home network + monitoring',
-    body:'Proxmox cluster, VLANs for IoT / trusted / guest, Wazuh + Grafana for visibility.',
-    stack:['Proxmox','pfSense','Wazuh'],
+    id:'03', tag:'MOBILE / API',
+    title:'Smart Grocery Management System',
+    body:'Team project using Grocy and its API to manage groceries locally, scan barcodes, generate shopping lists, and send WhatsApp alerts through Twilio.',
+    stack:['Grocy API','Twilio','Barcode Scanner'],
   },
   {
-    id:'04', tag:'AZURE · DEVSECOPS',
-    title:'GitHub Actions → Azure pipeline',
-    body:'OIDC trust, tfsec + Checkov gates, drift detection. Deploys to AKS with zero long-lived secrets.',
-    stack:['Azure','GitHub Actions','Checkov'],
+    id:'04', tag:'IOT',
+    title:'IoT Thermostat with Enhanced Cooling',
+    body:'Thermostat system with dual potentiometers, MQTT data exchange, BMP280 readings, PWM fan control, LCD output, and ThingSpeak monitoring.',
+    stack:['OrangePi','Raspberry Pi Pico','MQTT'],
   },
   {
-    id:'05', tag:'CTF · TOOLING',
-    title:'CTF runner CLI',
-    body:'Go CLI that scaffolds challenge dirs, auto-launches nmap/gobuster, and logs to a local notebook.',
-    stack:['Go','Linux','Nmap'],
+    id:'05', tag:'PLACEHOLDER',
+    title:'Upcoming Cybersecurity Project',
+    body:'Reserved for a future real project. This slot will be replaced with stronger work once the project is selected and documented.',
+    stack:['Coming Soon'],
   },
   {
-    id:'06', tag:'EDU · CONTENT',
-    title:'SOC analyst primer (workshop)',
-    body:'Hands-on workshop for juniors — Splunk queries, triage, incident reporting. Ran twice at uni.',
-    stack:['Splunk','SIEM','Teaching'],
+    id:'06', tag:'PLACEHOLDER',
+    title:'Future Project Slot',
+    body:'Reserved for another real project so the portfolio keeps six total projects without filling the page with fake work.',
+    stack:['Coming Soon'],
   },
 ];
 
@@ -581,8 +573,8 @@ function FeaturedProjects({ tw }) {
         }}>
           <SectionHeader
             eyebrow="03 / Selected work"
-            title="Things I've built."
-            subtitle="Six projects spanning cloud infra, offensive security, and tooling. More on the Projects page."
+            title="Projects and achievements."
+            subtitle="Real project work in secure hosting, application security, API integration, and IoT. Two slots are intentionally reserved for future projects."
             accent={accent} dark={dark}
           />
           <a href="projects.html" style={{
@@ -591,7 +583,7 @@ function FeaturedProjects({ tw }) {
             textDecoration:'none',
             display:'inline-flex', alignItems:'center', gap: 6,
             paddingBottom: 8,
-          }}>All projects →</a>
+          }}>All projects &gt;</a>
         </div>
         <div style={{
           position:'relative',
@@ -753,7 +745,7 @@ function CertBadge({ cert, accent, dark, index, reveal = true }) {
       <div style={{ width: sz, height: sz, flexShrink: 0, filter: shadow, transition: 'filter .30s' }}>
         <svg width={sz} height={sz} viewBox={`0 0 ${sz} ${sz}`} style={{ overflow: 'visible' }}>
           <defs>
-            {/* 3-stop gradient: specular flash → flat color → dark underside */}
+            {/* 3-stop gradient: specular flash to flat color to dark underside */}
             <linearGradient id={gradId} x1="20%" y1="0%" x2="80%" y2="100%">
               {isIssued ? (
                 <>
@@ -1015,7 +1007,7 @@ function Certifications({ tw }) {
           <SectionHeader
             eyebrow="04 / Certifications"
             title="Verifiable credentials."
-            subtitle="Earned and in progress — cloud, security, and language."
+            subtitle="Earned and in progress across security, language, and cloud topics."
             accent={accent} dark={dark} align="center"
           />
         </div>
@@ -1068,7 +1060,7 @@ function Certifications({ tw }) {
                   lineHeight: 1,
                   cursor: 'pointer',
                 }}
-              >‹</button>
+              >&lt;</button>
               <button
                 type="button"
                 aria-label="Next certificate"
@@ -1084,7 +1076,7 @@ function Certifications({ tw }) {
                   lineHeight: 1,
                   cursor: 'pointer',
                 }}
-              >›</button>
+              >&gt;</button>
             </div>
             <div style={{
               display: 'flex',
@@ -1137,28 +1129,41 @@ function Certifications({ tw }) {
 // ── Experience timeline ──────────────────────────────────────
 const EXPERIENCE = [
   {
-    period:'2024 — present',
-    title:'BSc Cybersecurity & Cloud',
-    org:'Fontys University of Applied Sciences',
-    body:'Final year. Focus areas: cloud architecture, offensive security, zero-trust networking.',
+    period:'Next step',
+    title:'Master in Cybersecurity',
+    org:'University West, Trollhattan, Sweden',
+    body:'Planned next study path after my current program. The goal is to deepen my cybersecurity knowledge and connect it with stronger research and advanced practical work.',
+    ghost:true,
   },
   {
-    period:'Summer 2025',
-    title:'IT Intern · Cloud Operations',
-    org:'Regional logistics company',
-    body:'Migrated on-prem workloads to Azure. Wrote Terraform modules used across three production environments.',
+    period:'2026',
+    title:'Thomas Minder Secure Hosting Platform',
+    org:'Fontys University of Applied Sciences',
+    body:'Team project building a secure hosting platform for PHP applications with Kubernetes, Docker, NGINX, MySQL, Terraform, Ansible, CrowdSec, and CIS Controls.',
+  },
+  {
+    period:'2026',
+    title:'Shopmore E-commerce Security Check',
+    org:'Application Security individual project',
+    body:'Performed a full penetration test on a vulnerable web shop, documented XSS, CSRF, missing access controls, clickjacking, CVSS scores, proof of concept steps, and mitigations.',
+  },
+  {
+    period:'2025',
+    title:'Smart Grocery Management System',
+    org:'Skills Integration Lab 1 and 2',
+    body:'Worked in a team to adapt Grocy for a client, integrate the Grocy API, send WhatsApp alerts through Twilio, and document the product with user stories, test plans, and design work.',
   },
   {
     period:'2024',
-    title:'Volunteer · CTF Club',
-    org:'Student society',
-    body:'Organized monthly CTFs, mentored first-years, authored three web-exploitation challenges.',
+    title:'IoT Thermostat with Enhanced Cooling',
+    org:'IoT Recovery Exam',
+    body:'Built a thermostat using OrangePi, Raspberry Pi Pico, MQTT, a BMP280 sensor, PWM fan control, dual potentiometers, LCD output, and ThingSpeak monitoring.',
   },
   {
-    period:'2023',
-    title:'Helpdesk · Part-time',
-    org:'Local SMB',
-    body:'Tier-1 support, Active Directory hygiene, endpoint rollouts. Learned how real users break things.',
+    period:'Current program',
+    title:'Cybersecurity & Cloud Management',
+    org:'Student portfolio foundation',
+    body:'Building skills across security testing, cloud infrastructure, APIs, documentation, teamwork, and practical troubleshooting.',
   },
 ];
 
@@ -1209,7 +1214,9 @@ function Experience({ tw }) {
           width: 1, background: border,
           transform: alternating ? 'translateX(-50%)' : 'none',
         }}/>
-        {EXPERIENCE.map((e, i) => (
+        {EXPERIENCE.map((e, i) => {
+          const isGhost = Boolean(e.ghost);
+          return (
           <div key={i} data-rj-reveal={alternating ? (i % 2 === 0 ? 'left' : 'right') : true} style={{
             '--rj-delay': `${80 + i * 70}ms`,
             position:'relative',
@@ -1217,13 +1224,16 @@ function Experience({ tw }) {
             display: alternating ? 'grid' : 'block',
             gridTemplateColumns: alternating ? '1fr 80px 1fr' : 'none',
             alignItems:'start',
+            opacity: isGhost ? 0.72 : 1,
           }}>
             <div style={{
               position:'absolute',
               left: alternating ? '50%' : isMobile ? -23 : -29,
               top: 4,
               width: 10, height: 10, borderRadius: 5,
-              background: accent, boxShadow: `0 0 0 3px ${dark ? PALETTE.indigo : PALETTE.white}, 0 0 0 4px ${border}`,
+              background: isGhost ? (dark ? PALETTE.indigo : PALETTE.white) : accent,
+              border: isGhost ? `1px dashed ${accent}` : 'none',
+              boxShadow: `0 0 0 3px ${dark ? PALETTE.indigo : PALETTE.white}, 0 0 0 4px ${border}`,
               transform: alternating ? 'translateX(-50%)' : 'none',
             }}/>
             <div style={{
@@ -1251,7 +1261,7 @@ function Experience({ tw }) {
               }}>{e.body}</div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
       </div>
       </div>

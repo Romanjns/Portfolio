@@ -7,70 +7,82 @@ import { useTweaks } from '../shared/use-tweaks.jsx';
 // Extended project data with details for carousel
 const PROJECTS_DETAILED = [
   {
-    id:'01', tag:'CLOUD · IAC',
-    title:'Self-healing AWS VPC with Terraform',
-    body:'Multi-AZ VPC, auto-scaling app tier, CloudWatch → Lambda remediation loops. ~40% cost drop over baseline.',
-    problem:'Manual scaling during traffic spikes was causing downtime. Cost was spiraling without predictive controls.',
-    learnings:'Mastered Terraform modules for reusability. Learned CloudWatch → Lambda event-driven remediation. Cost optimization through reserved instances + savings plans.',
-    stack:['AWS','Terraform','Lambda','Python'],
-    skills:['Infrastructure','Automation','Cost Optimization'],
+    id:'01', tag:'SECURITY / CLOUD / KUBERNETES',
+    title:'Thomas Minder Secure Hosting Platform',
+    body:'Work in progress secure hosting platform for PHP applications under the thomasminder.be domain. The team is building secure authentication, automated deployment, DNS setup, monitoring, and vulnerability scanning.',
+    problem:'The client needs a hosting platform that is simple for customers to use while still applying strong security controls around deployment, user data, and application isolation.',
+    learnings:'I am applying CIS Controls in a real team project, improving API and UI integration skills, and learning how to design secure database handling for user data.',
+    stack:['Kubernetes','Docker','NGINX','PHP','MySQL','Terraform','Ansible','CrowdSec'],
+    skills:['Secure Architecture','Team Collaboration','API Development','Agile'],
     github:'https://github.com/Romanjns',
-    demo:'https://demo.example.com',
+    githubLabel:'Project progress',
+    demo:'contact.html',
+    demoLabel:'Design report',
   },
   {
-    id:'02', tag:'SECURITY · RESEARCH',
-    title:'Web app pentest writeups',
-    body:'Documented 12 engagements on intentionally vulnerable targets. IDOR, SSRF, auth flaws, chained exploits.',
-    problem:'Junior pentesters had no reference material. Couldn\'t find consolidated, practical vulnerability chains.',
-    learnings:'Built a reusable exploitation checklist. Learned how vulns compound in real apps. Recognized business logic bypass patterns.',
-    stack:['Burp','OWASP','HTB'],
-    skills:['Penetration Testing','Web Security','Documentation'],
+    id:'02', tag:'APPLICATION SECURITY / PENTEST',
+    title:'Shopmore E-commerce Security Check',
+    body:'Individual Application Security project where I performed a full penetration test on Shopmore, a vulnerable e-commerce web application provided by my instructor.',
+    problem:'The goal was to find exploitable weaknesses, show their real impact, and write a clear report for developers and decision-makers.',
+    learnings:'I practiced the full pentest process from scoping to reporting, including XSS, CSRF, unauthenticated admin access, clickjacking, CVSS scoring, and mitigation advice.',
+    stack:['Burp Suite','OWASP ZAP','CVSS','OWASP WSTG'],
+    skills:['Penetration Testing','Security Reporting','Risk Rating','Proof of Concept'],
     github:'https://github.com/Romanjns',
-    demo:'https://writeups.example.com',
+    githubLabel:'Project report',
+    demo:'contact.html',
+    demoLabel:'Full security report',
   },
   {
-    id:'03', tag:'HOMELAB · NET',
-    title:'Segmented home network + monitoring',
-    body:'Proxmox cluster, VLANs for IoT / trusted / guest, Wazuh + Grafana for visibility.',
-    problem:'Home network was flat and unmonitored. Couldn\'t detect anomalies or isolate compromised devices.',
-    learnings:'Implemented network segmentation best practices. Mastered VLAN trunking and pf rules. Built observability from scratch.',
-    stack:['Proxmox','pfSense','Wazuh'],
-    skills:['Network Segmentation','Monitoring','Virtualization'],
+    id:'03', tag:'MOBILE APP / API INTEGRATION',
+    title:'Smart Grocery Management System',
+    body:'Team project for Skills Integration Lab 1 and 2. We used Grocy as the base system and built a mobile-focused workflow with inventory tracking, barcode scanning, shopping list generation, and WhatsApp alerts.',
+    problem:'Our client Jochen needed an easy way to manage groceries locally on his own server, keeping the data private while still receiving practical reminders.',
+    learnings:'I learned how to connect systems through APIs, work with inventory data, write professional project documentation, and plan work with Scrum and Agile methods.',
+    stack:['Grocy API','Twilio WhatsApp Business API','Barcode Scanner'],
+    skills:['API Integration','Notifications','Documentation','Scrum'],
     github:'https://github.com/Romanjns',
-    demo:'https://lab.example.com',
+    githubLabel:'Project files',
+    demo:'contact.html',
+    demoLabel:'Documentation and design',
   },
   {
-    id:'04', tag:'AZURE · DEVSECOPS',
-    title:'GitHub Actions → Azure pipeline',
-    body:'OIDC trust, tfsec + Checkov gates, drift detection. Deploys to AKS with zero long-lived secrets.',
-    problem:'Manual approval gates were bottlenecks. Long-lived service principals created audit risk.',
-    learnings:'Implemented OIDC federation for keyless auth. Integrated policy-as-code scanning. Built drift detection automation.',
-    stack:['Azure','GitHub Actions','Checkov'],
-    skills:['CI/CD','Policy-as-Code','Cloud Security'],
+    id:'04', tag:'IOT / TEMPERATURE CONTROL',
+    title:'IoT Thermostat with Enhanced Cooling',
+    body:'Individual IoT Recovery Exam project where I built a thermostat that controls heating and cooling with two potentiometers, MQTT communication, live temperature readings, and an LCD display.',
+    problem:'The system needed accurate temperature control and faster cooling when required, with clear feedback from sensors and controls.',
+    learnings:'I learned how to combine sensors, controllers, MQTT data flow, PWM fan control, ThingSpeak monitoring, troubleshooting, planning, and clear project explanation.',
+    stack:['OrangePi','Raspberry Pi Pico','MQTT','BMP280','PWM','ThingSpeak'],
+    skills:['IoT Development','MQTT','Hardware Integration','Troubleshooting'],
     github:'https://github.com/Romanjns',
-    demo:'https://pipeline.example.com',
+    githubLabel:'Documentation',
+    demo:'contact.html',
+    demoLabel:'Video proof',
   },
   {
-    id:'05', tag:'CTF · TOOLING',
-    title:'CTF runner CLI',
-    body:'Go CLI that scaffolds challenge dirs, auto-launches nmap/gobuster, and logs to a local notebook.',
-    problem:'Manually setting up for each CTF challenge was repetitive and error-prone.',
-    learnings:'Built a performant CLI in Go. Learned shell automation and process spawning. Integrated logging workflows.',
-    stack:['Go','Linux','Nmap'],
-    skills:['CLI Development','Automation','Competitive Security'],
+    id:'05', tag:'PLACEHOLDER / NEXT PROJECT',
+    title:'Upcoming Cybersecurity Project',
+    body:'This slot is reserved for a future project. I am keeping the portfolio at six projects so the page layout stays complete while I choose the strongest work to add here.',
+    problem:'I still need to select a real project that is strong enough to deserve this position in the portfolio.',
+    learnings:'This placeholder will be replaced with clear context, results, tools, my contribution, and lessons learned once the project is selected.',
+    stack:['To be added'],
+    skills:['Coming Soon'],
     github:'https://github.com/Romanjns',
-    demo:'https://ctf.example.com',
+    githubLabel:'Coming soon',
+    demo:'contact.html',
+    demoLabel:'Contact me',
   },
   {
-    id:'06', tag:'EDU · CONTENT',
-    title:'SOC analyst primer (workshop)',
-    body:'Hands-on workshop for juniors — Splunk queries, triage, incident reporting. Ran twice at uni.',
-    problem:'Junior analysts lacked practical incident triage skills. Theory-only learning wasn\'t effective.',
-    learnings:'Designed effective technical curriculum. Learned how to teach hands-on security concepts. Built reusable lab environments.',
-    stack:['Splunk','SIEM','Teaching'],
-    skills:['Security Operations','Mentoring','Content Creation'],
+    id:'06', tag:'PLACEHOLDER / FUTURE WORK',
+    title:'Future Project Slot',
+    body:'A second reserved slot for another real project. It will be updated when I have a project that adds something different from the current security, cloud, API, and IoT work.',
+    problem:'The portfolio needs six total projects, but I do not want to fill this one with weak or fake work.',
+    learnings:'The final version will explain the problem, what I built, the tools used, my role, and what I learned.',
+    stack:['To be added'],
+    skills:['Coming Soon'],
     github:'https://github.com/Romanjns',
-    demo:'https://workshop.example.com',
+    githubLabel:'Coming soon',
+    demo:'contact.html',
+    demoLabel:'Contact me',
   },
 ];
 
@@ -161,7 +173,7 @@ function ProjectCarousel({ tw }) {
       maxWidth: 1600,
       margin: '0 auto',
     }}>
-      {/* LEFT PANE — Visual carousel */}
+      {/* LEFT PANE - Visual carousel */}
       <div style={{
         position: 'relative',
         zIndex: 1,
@@ -308,7 +320,7 @@ function ProjectCarousel({ tw }) {
               e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            ←
+            &lt;
           </button>
           <button
             onClick={goNext}
@@ -338,12 +350,12 @@ function ProjectCarousel({ tw }) {
               e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            →
+            &gt;
           </button>
         </div>
       </div>
 
-      {/* RIGHT PANE — Details panel */}
+      {/* RIGHT PANE - Details panel */}
       <div key={`detail-${current}`}
         style={{
           position:'relative',
@@ -542,7 +554,7 @@ function ProjectCarousel({ tw }) {
               e.currentTarget.style.color = fg;
             }}
           >
-            GitHub
+            {project.githubLabel || 'GitHub'}
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path d="M4 3h5v5M4 8l5-5" />
             </svg>
@@ -578,7 +590,7 @@ function ProjectCarousel({ tw }) {
               e.currentTarget.style.color = fg;
             }}
           >
-            Demo
+            {project.demoLabel || 'Demo'}
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path d="M4 3h5v5M4 8l5-5" />
             </svg>
@@ -630,7 +642,7 @@ function ProjectsPage() {
           maxWidth: 960,
           animationDelay: '0.1s',
         }}>
-          Six things I built,<br />and what I learned.
+          Projects and achievements,<br />ordered by impact.
         </h1>
 
         <p className="rj-fadeup" style={{
@@ -641,8 +653,9 @@ function ProjectsPage() {
           margin: '0 0 0',
           animationDelay: '0.2s',
         }}>
-          Navigate through my projects using arrow keys or buttons. Each one started
-          because something annoyed me, and ended when it stopped annoying me.
+          A focused overview of the strongest work I have done so far in secure
+          hosting, application security, API integration, and IoT. Two slots are
+          reserved for future projects so the portfolio stays ready for six.
         </p>
         </div>
       </section>

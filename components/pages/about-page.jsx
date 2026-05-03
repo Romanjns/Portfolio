@@ -15,8 +15,6 @@ function CVSection({ tw }) {
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const subtle = dark ? 'rgba(248,252,253,0.68)' : 'rgba(31,34,36,0.72)';
   const border = dark ? 'rgba(248,252,253,0.11)' : 'rgba(31,34,36,0.12)';
-  const paper = dark ? 'rgba(248,252,253,0.92)' : 'rgba(248,252,253,0.98)';
-  const ink = PALETTE.indigo;
 
   return (
     <section style={{
@@ -61,59 +59,48 @@ function CVSection({ tw }) {
             boxShadow: dark ? '0 24px 80px -28px rgba(0,0,0,0.55)' : '0 24px 80px -28px rgba(31,34,36,0.16)',
           }}>
             <div style={{
-              aspectRatio:'0.72 / 1',
+              aspectRatio:'0.707 / 1',
               borderRadius: 6,
-              background: paper,
-              color: ink,
-              padding: isMobile ? 20 : 26,
+              background: dark ? 'rgba(248,252,253,0.08)' : 'rgba(31,34,36,0.04)',
               boxShadow:'0 16px 36px -22px rgba(31,34,36,0.45)',
-              display:'flex',
-              flexDirection:'column',
-              gap: 18,
+              overflow: 'hidden',
+              position: 'relative',
             }}>
-              <div>
+              <object
+                data={`${CV_FILE}#page=1&view=FitH&toolbar=0&navpanes=0&scrollbar=0`}
+                type="application/pdf"
+                aria-label="Preview of Roman Janssens CV"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'block',
+                  border: 0,
+                  pointerEvents: 'none',
+                }}
+              >
                 <div style={{
-                  fontFamily:'"Space Grotesk", sans-serif',
-                  fontSize: isMobile ? 24 : 30,
-                  fontWeight: 700,
-                  lineHeight: 1.05,
-                }}>Roman<br/>Janssens</div>
-                <div style={{
-                  marginTop: 10,
-                  width: 78,
-                  height: 4,
-                  background: accent,
-                }}/>
-              </div>
+                  width: '100%',
+                  height: '100%',
+                  display: 'grid',
+                  placeItems: 'center',
+                  padding: 24,
+                  boxSizing: 'border-box',
+                  textAlign: 'center',
+                  color: fg,
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                }}>
+                  CV preview unavailable. Open the PDF to view it.
+                </div>
+              </object>
               <div style={{
-                fontFamily:'"JetBrains Mono", monospace',
-                fontSize: 10.5,
-                color: PALETTE.blueDk,
-                textTransform:'uppercase',
-                letterSpacing: 1.2,
-              }}>Cloud & Cybersecurity CV</div>
-              {[0.92, 0.76, 0.86, 0.64].map((w, i) => (
-                <div key={i} style={{
-                  height: 9,
-                  width: `${w * 100}%`,
-                  background: i === 0 ? 'rgba(48,88,93,0.22)' : 'rgba(31,34,36,0.12)',
-                  borderRadius: 2,
-                }}/>
-              ))}
-              <div style={{
-                marginTop:'auto',
-                display:'grid',
-                gridTemplateColumns:'1fr 1fr',
-                gap: 10,
-              }}>
-                {[0, 1, 2, 3].map(i => (
-                  <div key={i} style={{
-                    height: 42,
-                    borderRadius: 4,
-                    background: dark ? 'rgba(248,252,253,0.12)' : 'rgba(31,34,36,0.06)',
-                  }}/>
-                ))}
-              </div>
+                position: 'absolute',
+                inset: 0,
+                boxShadow: dark
+                  ? 'inset 0 0 0 1px rgba(248,252,253,0.12)'
+                  : 'inset 0 0 0 1px rgba(31,34,36,0.08)',
+                pointerEvents: 'none',
+              }} />
             </div>
           </div>
         </a>
@@ -163,9 +150,6 @@ function CVSection({ tw }) {
               transition:'transform .18s ease, background .18s ease, border-color .18s ease',
             }}>Download PDF</a>
           </div>
-          <div style={{ marginTop: 18, color: subtle, fontSize: 14, lineHeight: 1.6 }}>
-            Replace <span style={{ fontFamily:'"JetBrains Mono", monospace', color: accent }}>{CV_FILE}</span> with your real CV PDF when it is ready.
-          </div>
         </div>
       </div>
     </div>
@@ -175,9 +159,9 @@ function CVSection({ tw }) {
 
 function GlobeVisual({ accent, dark }) {
   const canvasRef = React.useRef(null);
-  const stateRef  = React.useRef({ raf: 0, land: null, lon: 96, dragging: false, lastX: 0, lastT: 0, velocity: 0, smoothing: false });
+  const stateRef  = React.useRef({ raf: 0, land: null, lon: -12, lat: -50, dragging: false, lastX: 0, lastT: 0, velocity: 0, smoothing: false });
 
-  const resetToUSA = () => {
+  const resetToSweden = () => {
     stateRef.current.velocity = 0;
     stateRef.current.smoothing = true;
   };
@@ -239,7 +223,8 @@ function GlobeVisual({ accent, dark }) {
     // R shrunk by 22px so atmosphere glow (R+16) stays within canvas bounds
     const cx = W / 2, cy = H / 2, R = W / 2 - 22;
     const s = stateRef.current;
-    s.lon = 96;
+    s.lon = -12;
+    s.lat = -50;
 
     const proj = d3.geoOrthographic()
       .scale(R).translate([cx, cy]).clipAngle(90).precision(0.5);
@@ -258,10 +243,11 @@ function GlobeVisual({ accent, dark }) {
 
     const frame = (now) => {
       if (s.smoothing) {
-        const diff = ((96 - s.lon) % 360 + 540) % 360 - 180;
+        const diff = ((-12 - s.lon) % 360 + 540) % 360 - 180;
         s.lon += diff * 0.08;
+        s.lat += (-50 - s.lat) * 0.08;
         s.velocity *= 0.82;
-        if (Math.abs(diff) < 0.3) { s.lon = 96; s.smoothing = false; }
+        if (Math.abs(diff) < 0.3 && Math.abs(-50 - s.lat) < 0.3) { s.lon = -12; s.lat = -50; s.smoothing = false; }
       } else if (!s.dragging) {
         s.lon += s.velocity;
         s.velocity *= 0.94;
@@ -270,10 +256,10 @@ function GlobeVisual({ accent, dark }) {
           s.lon -= 0.25;
         }
       }
-      proj.rotate([s.lon, -28, 0]);
+      proj.rotate([s.lon, s.lat, 0]);
       ctx.clearRect(0, 0, W, H);
 
-      // atmosphere glow — radius capped so it stays within canvas
+      // atmosphere glow - radius capped so it stays within canvas
       const atm = ctx.createRadialGradient(cx, cy, R - 1, cx, cy, R + 16);
       atm.addColorStop(0, dark ? 'rgba(30,77,140,0.55)' : 'rgba(147,197,253,0.50)');
       atm.addColorStop(1, 'transparent');
@@ -302,7 +288,7 @@ function GlobeVisual({ accent, dark }) {
         ctx.lineWidth   = 0.55; ctx.stroke();
       }
 
-      // specular shine — 3D sphere illusion
+      // specular shine - 3D sphere illusion
       const spec = ctx.createRadialGradient(cx * 0.57, cy * 0.40, 0, cx * 0.57, cy * 0.40, R * 1.15);
       spec.addColorStop(0,   dark ? 'rgba(255,255,255,0.17)' : 'rgba(255,255,255,0.26)');
       spec.addColorStop(0.4, 'rgba(255,255,255,0.04)');
@@ -314,8 +300,8 @@ function GlobeVisual({ accent, dark }) {
       ctx.beginPath(); gPath({ type:'Sphere' });
       ctx.strokeStyle = ac(0.30); ctx.lineWidth = 1; ctx.stroke();
 
-      // waypoint: geographic centre of contiguous USA (39°N 98°W)
-      const pin = proj([-98, 39]);
+      // waypoint: Trollhattan, Sweden
+      const pin = proj([12.2886, 58.2837]);
       if (pin) {
         const [px, py] = pin;
         const t = now * 0.001;
@@ -365,7 +351,7 @@ function GlobeVisual({ accent, dark }) {
         style={{ display:'block', width:'100%', maxWidth:280, height:'auto', margin:'0 auto', cursor:'grab', touchAction:'none' }}
       />
       <button
-        onClick={resetToUSA}
+        onClick={resetToSweden}
         style={{
           display:'block', margin:'10px auto 0',
           padding:'5px 14px', borderRadius:6,
@@ -376,7 +362,7 @@ function GlobeVisual({ accent, dark }) {
           letterSpacing:1, fontWeight:600,
           cursor:'pointer', textTransform:'uppercase',
         }}
-      >↺ Center America</button>
+      >Center Sweden</button>
     </div>
   );
 }
@@ -392,9 +378,9 @@ function WhatsNext({ tw }) {
     : 'linear-gradient(160deg, #f2f9f8 0%, #e6f2f0 100%)';
 
   const items = [
-    ['Cloud security internship', 'Work with a team that ships secure infrastructure in production.'],
-    ['AWS Solutions Architect', 'Finish the associate track and apply it in more realistic builds.'],
-    ['Security lab publishing', 'Turn home-lab experiments and CTF notes into clearer public writeups.'],
+    ['Master in Cybersecurity', 'Continue my studies at University West in Trollhattan, Sweden.'],
+    ['Stronger security projects', 'Replace the two placeholder project slots with real work that shows clear results.'],
+    ['Professional reporting', 'Keep improving how I document technical findings for both developers and decision-makers.'],
   ];
 
   return (
@@ -413,13 +399,13 @@ function WhatsNext({ tw }) {
           <SectionHeader
             eyebrow="04 / What's next"
             title="Where I want to go next."
-            subtitle="The short version: keep building practical cloud security skills, and do it around people who care about clear systems."
+            subtitle="The next step is a master's degree in Cybersecurity at University West in Trollhattan, Sweden, while I keep building stronger practical projects."
             accent={accent}
             dark={dark}
           />
         </div>
 
-        {/* Dream card — move to America */}
+        {/* Next-step card */}
         <div data-rj-reveal style={{
           '--rj-delay': '80ms',
           display:'grid',
@@ -440,19 +426,19 @@ function WhatsNext({ tw }) {
               fontFamily:'"JetBrains Mono", monospace',
               fontSize: 10.5, color: accent, fontWeight: 700,
               letterSpacing: 1.4, marginBottom: 14,
-            }}>★ THE DREAM</div>
+            }}>NEXT STEP</div>
             <div style={{
               fontFamily:'"Space Grotesk", sans-serif',
               fontSize: isMobile ? 22 : 26, fontWeight: 700,
               color: fg, lineHeight: 1.25, marginBottom: 14,
-            }}>Move & work in America.</div>
+            }}>Study cybersecurity in Sweden.</div>
             <div style={{
               color: subtle, fontSize: 14.5, lineHeight: 1.68, marginBottom: 20,
             }}>
-              Long-term, I want to build my career in the US — working on infrastructure problems at scale, in a place where cloud security is taken seriously. Belgium gave me a strong foundation; America is where I want to apply it.
+              My next goal is to go to University West in Trollhattan, Sweden for a master's degree in Cybersecurity. I want to keep building practical security knowledge and connect it with stronger research, better reporting, and more advanced cloud security work.
             </div>
             <div style={{ display:'flex', gap: 8, flexWrap:'wrap' }}>
-              {['Work visa','US tech sector','Long-term goal'].map(tag => (
+              {['University West','Trollhattan','Cybersecurity master'].map(tag => (
                 <span key={tag} style={{
                   padding:'4px 10px', borderRadius: 4,
                   border:`1px solid ${accent}`,
@@ -557,7 +543,7 @@ function AboutPage() {
           color: fg, margin:'0 0 32px', maxWidth: 960,
           animationDelay:'0.1s',
         }}>
-          Cloud, security,<br/>and the quiet joy<br/>of well-built systems.
+          Cybersecurity, cloud,<br/>and practical systems<br/>that solve real problems.
         </h1>
 
         <div style={{
@@ -569,10 +555,10 @@ function AboutPage() {
         }}>
           <div className="rj-fadeup" style={{ animationDelay:'0.3s' }}>
             {[
-              "I'm Roman — a final-year Cloud & Cybersecurity student based in Eindhoven. I spend most days between AWS consoles, a Proxmox home lab, and whatever CTF challenge is currently humbling me.",
-              "My interest isn't in security as an abstract. It's in the gap between how systems are documented and how they actually behave. Most interesting findings live there.",
-              "I like infrastructure that reads like prose — clear boundaries, obvious failure modes, dependencies you can actually count. Terraform that a stranger could take over next week without needing a call.",
-              "Outside of school I write short post-mortems on my home lab breakages, mentor first-years through our CTF club, and am slowly working through the AWS SA Associate material.",
+              "I'm Roman Janssens, a Cybersecurity & Cloud Management student focused on secure hosting, application security, API integration, and practical infrastructure projects.",
+              "I like projects where security is connected to something real: a hosting platform that needs safer deployments, an e-commerce app that needs testing, or a system that has to handle private data correctly.",
+              "My strongest work so far includes the Thomas Minder secure hosting platform, an individual Shopmore penetration test, a Grocy-based grocery management system, and an IoT thermostat with MQTT and sensor control.",
+              "After this program, my next goal is to study a master's degree in Cybersecurity at University West in Trollhattan, Sweden.",
             ].map((p, i) => (
               <p key={i} style={{
                 fontSize: isMobile ? 15 : 16, lineHeight: 1.65, color: subtle,
@@ -595,12 +581,12 @@ function AboutPage() {
             }}>At a glance</div>
 
             {[
-              ['Based in',   'Eindhoven · NL'],
-              ['Program',    'BSc Cybersecurity & Cloud'],
+              ['Based in',   'Belgium'],
+              ['Program',    'Cybersecurity & Cloud Management'],
               ['Graduating', 'Summer 2026'],
-              ['Focus',      'Cloud architecture · Pentesting'],
-              ['Languages',  'Dutch · English'],
-              ['Looking for','Summer internship 2026'],
+              ['Focus',      'Secure hosting / App security'],
+              ['Languages',  'Dutch / English'],
+              ['Next step',  'Master Cybersecurity in Sweden'],
             ].map(([k, v]) => (
               <div key={k} style={{
                 display:'flex', justifyContent:'space-between', gap: 16,
@@ -622,7 +608,7 @@ function AboutPage() {
               fontSize: 14, fontWeight: 600, textDecoration:'none',
               boxShadow:`0 9px 0 ${PALETTE.blueDk}33, 0 18px 32px -18px ${accent}cc`,
               transition:'transform .18s ease, box-shadow .18s ease, filter .18s ease',
-            }}>Get in touch →</a>
+            }}>Get in touch &gt;</a>
           </div>
         </div>
         </div>

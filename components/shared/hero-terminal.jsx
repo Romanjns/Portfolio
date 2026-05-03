@@ -1,7 +1,7 @@
 import React from 'react';
 import { PALETTE, useViewport, SectionPattern, sectionSurface, BigName } from './hero-shared.jsx';
 
-// Hero section — terminal focus, name near-left with breathing room.
+// Hero section - terminal focus, name near-left with breathing room.
 // Nav + footer come from shared-chrome; this is just the hero block.
 
 const RJ_ASCII = [
@@ -16,11 +16,11 @@ const RJ_ASCII = [
 const NEOFETCH_LINES = [
   { k: 'user',    v: 'roman@portfolio' },
   { k: 'sep',     v: '─────────────────' },
-  { k: 'Role',    v: 'Cloud & Cybersecurity Student' },
+  { k: 'Role',    v: 'Cybersecurity & Cloud Management Student' },
   { k: 'Year',    v: 'Final year (2026)' },
-  { k: 'Stack',   v: 'AWS · Azure · Terraform · Python' },
-  { k: 'Focus',   v: 'Scalable infra · Security fundamentals' },
-  { k: 'Certs',   v: 'AWS CCP · in-progress SAA' },
+  { k: 'Stack',   v: 'Kubernetes / Docker / Terraform / Burp' },
+  { k: 'Focus',   v: 'Secure hosting / app security / APIs' },
+  { k: 'Next',    v: 'Master Cybersecurity in Sweden' },
   { k: 'Status',  v: 'Available for collaboration' },
   { k: 'Contact', v: 'roman.janssens@mail' },
 ];
@@ -55,11 +55,11 @@ function Terminal({ accent, dark }) {
   const mobileLines = React.useMemo(() => [
     'roman@portfolio ~ % status',
     '',
-    'Role: Cloud & Cybersecurity Student',
+    'Role: Cybersecurity & Cloud Management Student',
     'Year: Final year (2026)',
-    'Stack: AWS / Azure / Terraform',
-    'Focus: Scalable infra + security',
-    'Certs: AWS CCP / SAA in progress',
+    'Stack: Kubernetes / Docker / Terraform / Burp',
+    'Focus: Secure hosting + app security',
+    'Next: Master Cybersecurity in Sweden',
     'Status: Available for collaboration',
     'Contact: roman.janssens@mail',
     '',
@@ -177,7 +177,7 @@ function Terminal({ accent, dark }) {
           fontSize: 12, fontWeight: 500,
           color: terminalSubtle,
           marginLeft: isMobile ? 4 : 10, letterSpacing: 0.2,
-        }}>roman@portfolio — zsh</span>
+        }}>roman@portfolio - zsh</span>
       </div>
       <div style={{
         padding: isMobile ? '16px 15px 20px' : '20px 22px 24px',
@@ -212,9 +212,9 @@ function FocusCard({ accent, dark }) {
   const subtle = dark ? 'rgba(248,252,253,0.60)' : 'rgba(31,34,36,0.60)';
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const items = [
-    { label: 'Cloud',     value: 'AWS · Azure · Terraform' },
-    { label: 'Security',  value: 'Pentesting · SIEM · Zero-trust' },
-    { label: 'Building',  value: 'Home lab · CTF writeups' },
+    { label: 'Cloud',     value: 'Kubernetes / Docker / Terraform' },
+    { label: 'Security',  value: 'Pentesting / CIS Controls / OWASP' },
+    { label: 'Building',  value: 'Secure hosting / APIs / IoT' },
   ];
   return (
     <div style={{
@@ -267,9 +267,9 @@ function FocusPanel({ accent, dark }) {
   const subtle = dark ? 'rgba(248,252,253,0.60)' : 'rgba(31,34,36,0.60)';
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const items = [
-    { id:'01', label: 'Cloud architecture', value: 'AWS, Azure, Terraform' },
-    { id:'02', label: 'Security practice', value: 'Pentesting, SIEM, zero-trust' },
-    { id:'03', label: 'Lab work', value: 'Home lab, CTF writeups' },
+    { id:'01', label: 'Secure platforms', value: 'Kubernetes, Docker, Terraform' },
+    { id:'02', label: 'Security practice', value: 'Pentesting, OWASP, CIS Controls' },
+    { id:'03', label: 'Practical builds', value: 'APIs, automation, IoT systems' },
   ];
 
   return (
@@ -391,9 +391,9 @@ function HeroSection({ tw }) {
             fontFamily:'"Space Grotesk", sans-serif',
             fontSize: isMobile ? 18 : 20, fontWeight: 500, color: fg,
             letterSpacing: 0, marginBottom: 10,
-          }}>Cloud & Cybersecurity Student</div>
+          }}>Cybersecurity & Cloud Management Student</div>
           <div style={{ fontSize: isMobile ? 14.5 : 15.5, lineHeight: 1.55, color: subtle }}>
-            Focused on cloud systems, security fundamentals, and scalable infrastructure.
+            Focused on secure hosting, application security, API integration, and practical cloud infrastructure.
           </div>
         </div>
 

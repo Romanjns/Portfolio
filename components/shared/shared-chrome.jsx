@@ -3,6 +3,80 @@ import { PALETTE, useViewport, Background, SectionPattern, useScrollReveal, sect
 
 // Shared Nav + Footer used across every page.
 
+const OPENABLE_FILE_RE = /\.(pdf|docx?|xlsx?|pptx?|zip|rar|7z)(?:[?#].*)?$/i;
+const INTERNAL_PAGE_PATHS = new Set([
+  '/',
+  '/index.html',
+  '/about',
+  '/about.html',
+  '/projects',
+  '/projects.html',
+  '/contact',
+  '/contact.html',
+  '/internship',
+  '/internship.html',
+]);
+
+function shouldOpenAwayFromPortfolio(anchor) {
+  const rawHref = anchor.getAttribute('href') || '';
+  if (
+    !rawHref ||
+    rawHref.startsWith('#') ||
+    rawHref.startsWith('javascript:') ||
+    rawHref.startsWith('tel:')
+  ) {
+    return false;
+  }
+
+  try {
+    const url = new URL(rawHref, window.location.href);
+    const path = url.pathname.replace(/\/+$/, '') || '/';
+
+    if (url.protocol === 'mailto:') return true;
+    if (url.origin !== window.location.origin) return true;
+    if (path.startsWith('/assets/files/') || OPENABLE_FILE_RE.test(path)) return true;
+
+    return !INTERNAL_PAGE_PATHS.has(path);
+  } catch (err) {
+    return OPENABLE_FILE_RE.test(rawHref);
+  }
+}
+
+function keepPortfolioOpen(root = document) {
+  root.querySelectorAll?.('a[href]').forEach((anchor) => {
+    if (!shouldOpenAwayFromPortfolio(anchor)) return;
+    anchor.setAttribute('target', '_blank');
+
+    const rel = new Set((anchor.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+    rel.add('noopener');
+    rel.add('noreferrer');
+    anchor.setAttribute('rel', Array.from(rel).join(' '));
+  });
+}
+
+// Keep external links and openable files from replacing the portfolio tab.
+(function () {
+  keepPortfolioOpen();
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        if (node.matches?.('a[href]')) keepPortfolioOpen(node.parentElement || document);
+        else keepPortfolioOpen(node);
+      });
+    });
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+
+  document.addEventListener('click', (event) => {
+    const anchor = event.target.closest('a[href]');
+    if (!anchor || !shouldOpenAwayFromPortfolio(anchor)) return;
+    anchor.setAttribute('target', '_blank');
+    anchor.setAttribute('rel', 'noopener noreferrer');
+  }, true);
+})();
+
 // Inject menu keyframes once at module load
 (function() {
   if (document.getElementById('rj-menu-kf')) return;
