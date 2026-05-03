@@ -1,9 +1,22 @@
-# Force HTTPS
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # Force HTTPS
   RewriteCond %{HTTPS} !=on
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Redirect .html URLs to clean URLs (301 canonical)
+  RewriteCond %{THE_REQUEST} \s/(.+)\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L]
+
+  # Internally serve .html files for clean URL requests
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^([^.]+)/?$ $1.html [L]
 </IfModule>
+
+# Custom 404 page
+ErrorDocument 404 /404.html
 
 # Gzip compression
 <IfModule mod_deflate.c>

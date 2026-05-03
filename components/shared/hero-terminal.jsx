@@ -433,28 +433,50 @@ function HeroSection({ tw }) {
             View projects
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
           </a>
-          <a href="contact.html" className="rj-secondary-action" style={{
-            display:'inline-flex', alignItems:'center', gap: 8,
-            justifyContent:'center',
-            padding:'14px 22px', borderRadius: 8,
-            background: dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.45)', color: fg,
-            border: `1px solid ${border}`,
-            fontSize: 15, fontWeight: 500, textDecoration:'none',
-            transition:'transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease',
-          }}
+          <a
+            href="contact.html"
+            className="rj-secondary-action"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              justifyContent: 'center',
+              padding: '14px 22px',
+              borderRadius: 8,
+
+              border: `1px solid ${border}`,
+
+              background: dark
+                ? 'rgba(248,252,253,0.035)'
+                : 'rgba(255,255,255,0.45)',
+
+              color: fg, // FIXED: prevents default purple link color
+
+              fontSize: 15,
+              fontWeight: 500,
+              textDecoration: 'none',
+
+              transition:
+                'transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease',
+            }}
             onMouseEnter={e => {
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.background = dark ? 'rgba(48,88,93,0.20)' : 'rgba(48,88,93,0.10)';
               e.currentTarget.style.borderColor = PALETTE.blueDk;
-              e.currentTarget.style.color = dark ? PALETTE.white : PALETTE.indigo;
+              e.currentTarget.style.color = dark
+                ? PALETTE.white
+                : PALETTE.indigo;
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.background = dark ? 'rgba(248,252,253,0.035)' : 'rgba(255,255,255,0.45)';
+              e.currentTarget.style.background = dark
+                ? 'rgba(248,252,253,0.035)'
+                : 'rgba(255,255,255,0.45)';
               e.currentTarget.style.borderColor = border;
               e.currentTarget.style.color = fg;
             }}
-          >Get in touch</a>
+          >
+            Get in touch
+          </a>
         </div>
 
         {showTerminal && isMobile && (

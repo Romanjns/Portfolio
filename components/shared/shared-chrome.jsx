@@ -81,10 +81,11 @@ function Nav({ current, dark, accent, onToggleDark }) {
   const [hasScrolled, setHasScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const pages = [
-    ['index.html', 'Home'],
-    ['about.html', 'About'],
-    ['projects.html', 'Projects'],
-    ['contact.html', 'Contact'],
+    ['/', 'Home'],
+    ['/about', 'About'],
+    ['/internship', 'Internship'],
+    ['/projects', 'Projects'],
+    ['/contact', 'Contact'],
   ];
 
   const measureIndicator = React.useCallback((animateFromPrevious = false) => {
@@ -267,7 +268,7 @@ function Nav({ current, dark, accent, onToggleDark }) {
         padding: isMobile ? '20px 5vw 12px' : isTablet ? '24px 5vw' : '28px 6vw',
         maxWidth: 1600, margin:'0 auto', width:'100%', boxSizing:'border-box',
       }}>
-      <a href="index.html" style={{ display:'flex', alignItems:'center', textDecoration:'none' }}>
+      <a href="/" style={{ display:'flex', alignItems:'center', textDecoration:'none' }}>
         <img
           src={dark ? 'assets/images/logo-white.svg' : 'assets/images/logo-dark.svg'}
           alt="RJ"
@@ -364,13 +365,14 @@ function Footer({ dark, accent }) {
     : 'linear-gradient(180deg, rgba(238,247,245,0.94), rgba(248,252,253,0.98))';
 
   const socials = [
-    { label:'GitHub',   href:'https://github.com',   icon:'github' },
-    { label:'LinkedIn', href:'https://linkedin.com', icon:'linkedin' },
+    { label:'GitHub',   href:'https://github.com/Romanjns', icon:'github' },
+    { label:'LinkedIn', href:'https://www.linkedin.com/in/roman-janssens-3652b2298/', icon:'linkedin' },
+    { label:'Instagram', href:'https://www.instagram.com/roman.janssens05/', icon:'instagram' },
     { label:'Email',    href:'mailto:roman.janssens@mail', icon:'mail' },
   ];
 
   return (
-    <footer data-rj-reveal style={{
+    <footer style={{
       position:'relative', zIndex: 10,
       padding: isMobile ? '40px 5vw 28px' : isTablet ? '44px 5vw 30px' : '48px 6vw 32px',
       fontFamily:'"Manrope", sans-serif',
@@ -395,10 +397,10 @@ function Footer({ dark, accent }) {
           </div>
         </div>
         <FooterCol title="Navigate">
-          <FooterLink href="index.html" accent={accent}>Home</FooterLink>
-          <FooterLink href="about.html" accent={accent}>About</FooterLink>
-          <FooterLink href="projects.html" accent={accent}>Projects</FooterLink>
-          <FooterLink href="contact.html" accent={accent}>Contact</FooterLink>
+          <FooterLink href="/" accent={accent}>Home</FooterLink>
+          <FooterLink href="/about" accent={accent}>About</FooterLink>
+          <FooterLink href="/projects" accent={accent}>Projects</FooterLink>
+          <FooterLink href="/contact" accent={accent}>Contact</FooterLink>
         </FooterCol>
         <FooterCol title="Connect">
           {socials.map(s => (
@@ -439,9 +441,9 @@ function FooterCol({ title, children }) {
 
 function saveNavLine() {
   try {
-    let filename = window.location.pathname.split('/').pop() || 'index.html';
-    if (!filename.includes('.')) filename += '.html';
-    const activeNav = document.querySelector(`header nav a[href="${filename}"]`);
+    const segment = window.location.pathname.replace(/\.html$/, '').split('/').filter(Boolean).pop() || 'index';
+    const href = segment === 'index' ? '/' : `/${segment}`;
+    const activeNav = document.querySelector(`header nav a[href="${href}"]`);
     if (activeNav) {
       const rect = activeNav.getBoundingClientRect();
       sessionStorage.setItem('rj-nav-line', JSON.stringify({ left: rect.left, width: rect.width }));
@@ -454,7 +456,7 @@ function saveNavLine() {
 // buttons, project cards, footer links — is handled here so the sliding
 // indicator always animates on the destination page.
 (function () {
-  const PAGES = new Set(['index.html', 'about.html', 'projects.html', 'contact.html']);
+  const PAGES = new Set(['/', '/about', '/projects', '/contact', '/internship']);
   document.addEventListener('click', function (e) {
     const a = e.target.closest('a[href]');
     if (!a || a.closest('header nav')) return;
@@ -509,6 +511,10 @@ function PageShell({ current, children, tw, setTw, headerOverlay = false }) {
       document.body.style.backgroundColor = '';
     };
   }, [dark]);
+
+  React.useEffect(() => {
+    document.documentElement.style.setProperty('--rj-accent', accent);
+  }, [accent]);
 
   return (
     <div style={{

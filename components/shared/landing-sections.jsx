@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { PALETTE, useViewport, SectionPattern, sectionSurface, sectionFade, globalNoiseTexture, getSectionBackgroundTone } from './hero-shared.jsx';
+import { PALETTE, useViewport, SectionPattern, sectionSurface, sectionFade, globalNoiseTexture, getSectionBackgroundTone, getSectionTopAccent } from './hero-shared.jsx';
 
 // Landing-page sections (below hero): Skills, Featured Projects, Certifications, Experience.
 // Each section is a standalone component used on index.html.
@@ -287,6 +287,7 @@ function SkillsMarquee({ tw }) {
       background: getSectionBackgroundTone(0, dark),
       ...globalNoiseTexture(dark),
     }}>
+      {getSectionTopAccent(2, dark) && <div style={getSectionTopAccent(2, dark)} />}
       <div style={sectionFade('top', dark)}/>
       {/* Header + filter — padded */}
       <div data-rj-reveal style={{ position:'relative', zIndex: 1, padding: isMobile ? '0 5vw' : isTablet ? '0 5vw' : '0 6vw', maxWidth: 1600, margin:'0 auto', marginBottom: isMobile ? 32 : 44 }}>
@@ -562,6 +563,7 @@ function FeaturedProjects({ tw }) {
       background: getSectionBackgroundTone(1, dark),
       ...globalNoiseTexture(dark),
     }}>
+      {getSectionTopAccent(1, dark) && <div style={getSectionTopAccent(1, dark)} />}
       <div style={{
         padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
         maxWidth: 1600,
@@ -1001,6 +1003,7 @@ function Certifications({ tw }) {
       background: getSectionBackgroundTone(2, dark),
       ...globalNoiseTexture(dark),
     }}>
+      {getSectionTopAccent(2, dark) && <div style={getSectionTopAccent(2, dark)} />}
       <div style={sectionFade('top', dark)}/>
       <div style={{
         padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw',
@@ -1175,6 +1178,7 @@ function Experience({ tw }) {
       ...globalNoiseTexture(dark),
       padding: isMobile ? '64px 5vw' : isTablet ? '80px 5vw' : '100px 6vw 88px',
     }}>
+      {getSectionTopAccent(3, dark) && <div style={getSectionTopAccent(3, dark)} />}
       <div style={sectionFade('both', dark)}/>
       <div style={{ maxWidth: 1600, margin:'0 auto' }}>
       <div style={{ position:'relative', zIndex: 1 }}>
@@ -1184,7 +1188,7 @@ function Experience({ tw }) {
           margin: alternating ? '0 auto' : 0,
         }}>
           <SectionHeader
-            eyebrow="05 / Experience"
+            eyebrow="02 / Experience"
             title="What I've done so far."
             accent={accent} dark={dark}
             align={alternating ? 'center' : 'left'}

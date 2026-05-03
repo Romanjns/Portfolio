@@ -91,18 +91,42 @@ function sectionSurface(dark, strength = 1) {
   };
 }
 
-// Alternating section backgrounds for visual separation without noise
-// index: 0 = first section, 1 = second, etc.
+// 4-zone section backgrounds — rotates through neutral, teal, warm, teal
+// Palette: teal=#30585d, orange=#d03b08
 function getSectionBackgroundTone(index, dark) {
-  if (dark) {
-    return index % 2 === 0
-      ? 'linear-gradient(180deg, #1f2224 0%, #202729 100%)'
-      : 'linear-gradient(180deg, #252b2d 0%, #202426 100%)';
-  }
+  const zones = dark
+    ? [
+        'linear-gradient(158deg, #1f2224 0%, #1c2527 100%)',   // 0: neutral dark
+        'linear-gradient(158deg, #192c2f 0%, #152527 100%)',   // 1: teal wash
+        'linear-gradient(158deg, #241f1c 0%, #1f1a17 100%)',   // 2: warm/orange wash
+        'linear-gradient(158deg, #1a2d2f 0%, #162628 100%)',   // 3: teal wash
+      ]
+    : [
+        'linear-gradient(158deg, #f8fcfd 0%, #f0f7f7 100%)',   // 0: clean white
+        'linear-gradient(158deg, #e2efee 0%, #d6e7e5 100%)',   // 1: teal tint
+        'linear-gradient(158deg, #fdf0eb 0%, #f4e1d7 100%)',   // 2: orange/warm tint
+        'linear-gradient(158deg, #e4f1f0 0%, #d8e9e7 100%)',   // 3: teal tint
+      ];
 
-  return index % 2 === 0
-    ? 'linear-gradient(180deg, #f8fcfd 0%, #f3f8f8 100%)'
-    : 'linear-gradient(180deg, #eef7f5 0%, #e6f0ed 100%)';
+  return zones[index % 4];
+}
+
+// Thin accent line for the top of tinted sections (index 1, 2, 3)
+function getSectionTopAccent(index, dark) {
+  const teal   = '#30585d';
+  const orange = '#d03b08';
+  const colors = [null, teal, orange, teal];
+  const color  = colors[index % 4];
+  if (!color) return null;
+  const alpha  = dark ? '99' : '80';
+  return {
+    position: 'absolute',
+    top: 0, left: 0, right: 0,
+    height: 3,
+    background: `linear-gradient(90deg, transparent 0%, ${color}${alpha} 20%, ${color} 50%, ${color}${alpha} 80%, transparent 100%)`,
+    zIndex: 2,
+    pointerEvents: 'none',
+  };
 }
 
 // Subtle fade-out at section top and bottom for smooth transitions
@@ -437,8 +461,13 @@ if (typeof document !== 'undefined' && !document.getElementById('rj-keyframes'))
       transform: translateY(-2px);
       filter: saturate(1.06);
     }
+    .rj-secondary-action {
+      transition: transform .18s ease, border-color .18s ease, color .18s ease, background .18s ease;
+    }
     .rj-secondary-action:hover {
       transform: translateY(-2px);
+      border-color: var(--rj-accent) !important;
+      color: var(--rj-accent) !important;
     }
     @media (prefers-reduced-motion: reduce) {
       .rj-fadeup {
@@ -454,4 +483,4 @@ if (typeof document !== 'undefined' && !document.getElementById('rj-keyframes'))
   document.head.appendChild(s);
 }
 
-export { PALETTE, useViewport, useScrollReveal, SectionPattern, sectionSurface, sectionFade, globalNoiseTexture, getSectionBackgroundTone, MatrixRain, Background, BigName };
+export { PALETTE, useViewport, useScrollReveal, SectionPattern, sectionSurface, sectionFade, globalNoiseTexture, getSectionBackgroundTone, getSectionTopAccent, MatrixRain, Background, BigName };

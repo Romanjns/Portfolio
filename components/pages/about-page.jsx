@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import * as d3 from 'd3';
 import * as topo from 'topojson-client';
-import { PALETTE, useViewport, sectionSurface, SectionPattern, globalNoiseTexture, getSectionBackgroundTone, sectionFade } from '../shared/hero-shared.jsx';
+import { PALETTE, useViewport, sectionSurface, SectionPattern, globalNoiseTexture, getSectionBackgroundTone, getSectionTopAccent, sectionFade } from '../shared/hero-shared.jsx';
 import { PageShell } from '../shared/shared-chrome.jsx';
 import { useTweaks } from '../shared/use-tweaks.jsx';
 import { SectionHeader, Experience } from '../shared/landing-sections.jsx';
@@ -26,6 +26,7 @@ function CVSection({ tw }) {
       background: dark ? PALETTE.indigo : PALETTE.white,
       ...globalNoiseTexture(dark),
     }}>
+      {getSectionTopAccent(2, dark) && <div style={getSectionTopAccent(2, dark)} />}
       {/* Subtle fade effect for smooth section transition */}
       <div style={{
         position: 'absolute',
@@ -119,7 +120,7 @@ function CVSection({ tw }) {
 
         <div>
           <SectionHeader
-            eyebrow="06 / CV"
+            eyebrow="03 / CV"
             title="My resume, ready to open or download."
             subtitle="Use the preview to open the PDF in a new tab, or download a copy directly."
             accent={accent}
@@ -266,7 +267,7 @@ function GlobeVisual({ accent, dark }) {
         s.velocity *= 0.94;
         if (Math.abs(s.velocity) < 0.035) {
           s.velocity = 0;
-          s.lon -= 0.04;
+          s.lon -= 0.25;
         }
       }
       proj.rotate([s.lon, -28, 0]);
@@ -386,9 +387,9 @@ function WhatsNext({ tw }) {
   const fg = dark ? PALETTE.white : PALETTE.indigo;
   const subtle = dark ? 'rgba(248,252,253,0.66)' : 'rgba(31,34,36,0.72)';
   const border = dark ? 'rgba(248,252,253,0.11)' : 'rgba(48,88,93,0.20)';
-  const cardBg = dark
-    ? 'linear-gradient(180deg, rgba(42,49,50,0.78), rgba(31,34,36,0.94))'
-    : 'linear-gradient(180deg, rgba(250,252,247,0.98), rgba(238,246,244,0.96))';
+  const tealCardBg = dark
+    ? 'linear-gradient(160deg, rgba(48,88,93,0.26), rgba(31,34,36,0.96))'
+    : 'linear-gradient(160deg, #f2f9f8 0%, #e6f2f0 100%)';
 
   const items = [
     ['Cloud security internship', 'Work with a team that ships secure infrastructure in production.'],
@@ -404,12 +405,13 @@ function WhatsNext({ tw }) {
       background: getSectionBackgroundTone(1, dark),
       ...globalNoiseTexture(dark),
     }}>
+      {getSectionTopAccent(1, dark) && <div style={getSectionTopAccent(1, dark)} />}
       <div style={sectionFade('top', dark)}/>
       <div style={{ maxWidth: 1400, margin:'0 auto' }}>
       <div style={{ position:'relative', zIndex: 1 }}>
         <div data-rj-reveal>
           <SectionHeader
-            eyebrow="07 / What's next"
+            eyebrow="04 / What's next"
             title="Where I want to go next."
             subtitle="The short version: keep building practical cloud security skills, and do it around people who care about clear systems."
             accent={accent}
@@ -427,7 +429,7 @@ function WhatsNext({ tw }) {
           borderRadius: 12,
           padding: isMobile ? '28px 22px' : isTablet ? '32px' : '36px 44px',
           border: `1px solid ${border}`,
-          background: cardBg,
+          background: tealCardBg,
           boxShadow: dark ? '0 18px 45px -28px rgba(0,0,0,0.55)' : '0 18px 45px -28px rgba(48,88,93,0.22)',
           marginBottom: 14,
           position:'relative',
@@ -483,7 +485,7 @@ function WhatsNext({ tw }) {
               borderRadius: 8,
               padding:'22px',
               border: `1px solid ${border}`,
-              background: cardBg,
+              background: tealCardBg,
               boxShadow: dark ? '0 12px 32px -24px rgba(0,0,0,0.42)' : '0 12px 32px -24px rgba(48,88,93,0.20)',
             }}>
               <div style={{

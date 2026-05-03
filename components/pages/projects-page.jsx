@@ -14,7 +14,7 @@ const PROJECTS_DETAILED = [
     learnings:'Mastered Terraform modules for reusability. Learned CloudWatch → Lambda event-driven remediation. Cost optimization through reserved instances + savings plans.',
     stack:['AWS','Terraform','Lambda','Python'],
     skills:['Infrastructure','Automation','Cost Optimization'],
-    github:'https://github.com',
+    github:'https://github.com/Romanjns',
     demo:'https://demo.example.com',
   },
   {
@@ -25,7 +25,7 @@ const PROJECTS_DETAILED = [
     learnings:'Built a reusable exploitation checklist. Learned how vulns compound in real apps. Recognized business logic bypass patterns.',
     stack:['Burp','OWASP','HTB'],
     skills:['Penetration Testing','Web Security','Documentation'],
-    github:'https://github.com',
+    github:'https://github.com/Romanjns',
     demo:'https://writeups.example.com',
   },
   {
@@ -36,7 +36,7 @@ const PROJECTS_DETAILED = [
     learnings:'Implemented network segmentation best practices. Mastered VLAN trunking and pf rules. Built observability from scratch.',
     stack:['Proxmox','pfSense','Wazuh'],
     skills:['Network Segmentation','Monitoring','Virtualization'],
-    github:'https://github.com',
+    github:'https://github.com/Romanjns',
     demo:'https://lab.example.com',
   },
   {
@@ -47,7 +47,7 @@ const PROJECTS_DETAILED = [
     learnings:'Implemented OIDC federation for keyless auth. Integrated policy-as-code scanning. Built drift detection automation.',
     stack:['Azure','GitHub Actions','Checkov'],
     skills:['CI/CD','Policy-as-Code','Cloud Security'],
-    github:'https://github.com',
+    github:'https://github.com/Romanjns',
     demo:'https://pipeline.example.com',
   },
   {
@@ -58,7 +58,7 @@ const PROJECTS_DETAILED = [
     learnings:'Built a performant CLI in Go. Learned shell automation and process spawning. Integrated logging workflows.',
     stack:['Go','Linux','Nmap'],
     skills:['CLI Development','Automation','Competitive Security'],
-    github:'https://github.com',
+    github:'https://github.com/Romanjns',
     demo:'https://ctf.example.com',
   },
   {
@@ -69,7 +69,7 @@ const PROJECTS_DETAILED = [
     learnings:'Designed effective technical curriculum. Learned how to teach hands-on security concepts. Built reusable lab environments.',
     stack:['Splunk','SIEM','Teaching'],
     skills:['Security Operations','Mentoring','Content Creation'],
-    github:'https://github.com',
+    github:'https://github.com/Romanjns',
     demo:'https://workshop.example.com',
   },
 ];
