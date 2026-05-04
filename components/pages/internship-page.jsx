@@ -13,14 +13,14 @@ import { PageShell } from '../shared/shared-chrome.jsx';
 import { useTweaks } from '../shared/use-tweaks.jsx';
 import { SectionHeader } from '../shared/landing-sections.jsx';
 
-const COMPANY_LOGO = null;
+const COMPANY_LOGO = 'assets/images/crhacklab.webp';
 
 // Set `logo` to a real asset path when ready, for example: 'assets/images/logos/docker.svg'.
 const TECHNOLOGIES = [
   {
     name: 'Docker',
     purpose: 'Containerized deployment',
-    logo: null,
+    logo: 'assets/images/docker.svg',
     abbr: 'DK',
     role: 'Docker was the base deployment model for internal services on the UGREEN NAS. It made each platform easier to restart, move, document, and maintain.',
     focus: ['Compose based service definitions', 'Persistent volumes under the Docker root', 'Repeatable deployment and recovery steps'],
@@ -28,7 +28,7 @@ const TECHNOLOGIES = [
   {
     name: 'Caddy',
     purpose: 'HTTPS reverse proxy',
-    logo: null,
+    logo: 'assets/images/caddy.svg',
     abbr: 'CD',
     role: 'Caddy sat in front of the internal web services and handled clean routing with HTTPS. This improved the user-facing access pattern and removed direct port based usage.',
     focus: ['Reverse proxy routes', 'HTTPS configuration', 'Readable internal service URLs'],
@@ -36,7 +36,7 @@ const TECHNOLOGIES = [
   {
     name: 'Authentik',
     purpose: 'SSO and identity management',
-    logo: null,
+    logo: 'assets/images/authentik.svg',
     abbr: 'AK',
     role: 'Authentik provided the identity layer for the environment. It centralized login through OAuth2 and OpenID Connect and created a foundation for future single sign-on.',
     focus: ['OAuth2 and OIDC', 'Central user management', 'Future MFA and access policy expansion'],
@@ -44,7 +44,7 @@ const TECHNOLOGIES = [
   {
     name: 'Federated Wiki',
     purpose: 'Internal knowledge platform',
-    logo: null,
+    logo: 'assets/images/federated-wiki.webp',
     abbr: 'FW',
     role: 'Federated Wiki became the main knowledge-sharing service. It was deployed as a Dockerized internal platform with authentication, persistent data, and handoff documentation.',
     focus: ['Wiki farm configuration', 'Persistent wiki data', 'Authenticated internal access'],
@@ -52,7 +52,7 @@ const TECHNOLOGIES = [
   {
     name: 'Piwigo',
     purpose: 'Media library service',
-    logo: null,
+    logo: 'assets/images/piwigo.svg',
     abbr: 'PW',
     role: 'Piwigo was prepared as a structured media management platform for internal projects and event material. The work focused on deployment readiness and maintainability.',
     focus: ['Media library setup', 'NAS hosted storage', 'Future internal use preparation'],
@@ -60,7 +60,7 @@ const TECHNOLOGIES = [
   {
     name: 'Kubernetes',
     purpose: 'Future orchestration track',
-    logo: null,
+    logo: 'assets/images/kubernetes.svg',
     abbr: 'K8S',
     role: 'Kubernetes was researched as the next step for larger multi-service applications. The goal was to understand whether orchestration would fit future self-hosted collaboration platforms.',
     focus: ['Deployments and services', 'Scaling and restart behavior', 'Future Hubs hosting research'],
@@ -68,7 +68,7 @@ const TECHNOLOGIES = [
   {
     name: 'Linux',
     purpose: 'Host and service operations',
-    logo: null,
+    logo: 'assets/images/linux-tux.svg',
     abbr: 'LX',
     role: 'Linux skills were used across host configuration, DNS work, service inspection, SSH operations, logs, paths, and troubleshooting on NAS and alternative hardware.',
     focus: ['Host level troubleshooting', 'Service logs and shell access', 'DNS and configuration files'],
@@ -76,10 +76,26 @@ const TECHNOLOGIES = [
   {
     name: 'Tailscale',
     purpose: 'Private connectivity testing',
-    logo: null,
+    logo: 'assets/images/tailscale-light.svg',
     abbr: 'TS',
     role: 'Tailscale and VPN testing helped validate remote access and DNS behavior. It was part of making the services reachable without exposing internal systems publicly.',
     focus: ['Private network access', 'DNS behavior testing', 'Connectivity troubleshooting'],
+  },
+  {
+    name: 'OrbStack',
+    purpose: 'Local container runtime',
+    logo: 'assets/images/orbstack.webp',
+    abbr: 'OB',
+    role: 'OrbStack was used as the local container runtime for development and testing on macOS. It provided a fast and lightweight alternative for running Docker workloads during the internship.',
+    focus: ['Local Docker environment', 'Fast container startup', 'Development and testing workflow'],
+  },
+  {
+    name: 'Hubs CE',
+    purpose: 'Self-hosted collaboration platform',
+    logo: 'assets/images/hubzilla.svg',
+    abbr: 'HB',
+    role: 'Hubs CE was researched as a self-hosted collaboration and social platform. It was evaluated as a candidate for future community use within the CrHackLab environment.',
+    focus: ['Federated social hosting', 'Community platform evaluation', 'Self-hosted deployment research'],
   },
 ];
 
@@ -167,6 +183,7 @@ function useInternshipStyles() {
       }
       .rj-docs-stack {
         position: relative;
+        isolation: isolate;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -189,13 +206,19 @@ function useInternshipStyles() {
         text-decoration: none;
         color: var(--docText);
         border: 1px solid var(--docBorder);
-        background: linear-gradient(165deg, var(--docGlow), transparent 72%);
+        background:
+          linear-gradient(180deg, var(--docBase), var(--docBase)),
+          radial-gradient(ellipse 85% 58% at 18% 18%, var(--docSheen), transparent 58%),
+          linear-gradient(165deg, var(--docGlow), transparent 72%);
         box-shadow: 0 25px 35px rgba(0, 0, 0, 0.18);
-        backdrop-filter: blur(14px) saturate(145%);
-        -webkit-backdrop-filter: blur(14px) saturate(145%);
         transform: rotate(calc(var(--r) * 1deg));
         transition: transform 0.45s cubic-bezier(.2,.8,.2,1), border-color 0.2s ease, box-shadow 0.2s ease;
         overflow: hidden;
+        background-clip: padding-box;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform-style: preserve-3d;
+        will-change: transform;
       }
       .rj-doc-glass:nth-child(1) {
         transform: translateX(86px) rotate(calc(var(--r) * 1deg));
@@ -225,19 +248,26 @@ function useInternshipStyles() {
         font-weight: 700;
         letter-spacing: 1.3px;
         text-transform: uppercase;
+        z-index: 2;
       }
       .rj-doc-glass::after {
         content: "";
         position: absolute;
-        inset: -35% -55%;
-        background: linear-gradient(110deg, transparent 36%, rgba(255,255,255,0.16) 48%, transparent 60%);
-        transform: translateX(-55%);
+        top: -38%;
+        bottom: -38%;
+        left: -54%;
+        width: 38%;
+        background: linear-gradient(108deg, transparent 0%, rgba(255,255,255,0.20) 45%, rgba(255,255,255,0.06) 58%, transparent 100%);
+        filter: blur(10px);
+        transform: translateX(-135%) skewX(-13deg);
         opacity: 0;
-        transition: transform 0.55s ease, opacity 0.18s ease;
+        transition: transform 0.62s cubic-bezier(.2,.8,.2,1), opacity 0.18s ease;
         pointer-events: none;
+        z-index: 1;
       }
       .rj-docs-stack:hover .rj-doc-glass {
         transform: rotate(0deg) translateY(-6px);
+        z-index: 1;
       }
       .rj-doc-glass:hover {
         border-color: var(--docAccent);
@@ -246,7 +276,7 @@ function useInternshipStyles() {
       }
       .rj-doc-glass:hover::after {
         opacity: 1;
-        transform: translateX(55%);
+        transform: translateX(610%) skewX(-13deg);
       }
       @media (max-width: 720px) {
         .rj-docs-stack {
@@ -402,10 +432,11 @@ function InternshipHeroCard({ tw, reveal = true }) {
               src={COMPANY_LOGO}
               alt="CrHackLab logo"
               style={{
-                position: 'relative',
-                width: isMobile ? '76%' : '70%',
-                maxHeight: isMobile ? 92 : 112,
-                objectFit: 'contain',
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
                 display: 'block',
               }}
             />
@@ -603,9 +634,59 @@ function TechLogo({ tech, tw, size = 46 }) {
   );
 }
 
-function TechCard({ tech, tw, selected, onSelect }) {
+function TechCard({ tech, tw, selected, onSelect, compact = false }) {
   const { isMobile } = useViewport();
   const c = colors(tw.dark, tw.accent);
+
+  if (compact) {
+    return (
+      <button
+        type="button"
+        className="rj-tech-card"
+        onClick={onSelect}
+        aria-pressed={selected}
+        style={{
+          width: '100%',
+          minHeight: isMobile ? 46 : 50,
+          padding: isMobile ? '7px 9px' : '8px 10px',
+          borderRadius: 12,
+          textAlign: 'left',
+          cursor: 'pointer',
+          color: 'inherit',
+          border: `1px solid ${selected ? c.accent : c.border}`,
+          background: selected
+            ? tw.dark
+              ? 'linear-gradient(145deg, rgba(208,59,8,0.18), rgba(48,88,93,0.14))'
+              : 'linear-gradient(145deg, rgba(208,59,8,0.11), rgba(255,255,255,0.78))'
+            : tw.dark
+              ? 'rgba(248,252,253,0.055)'
+              : 'rgba(255,255,255,0.70)',
+          boxShadow: selected
+            ? tw.dark
+              ? '0 16px 38px -28px rgba(208,59,8,0.72), 0 0 0 1px rgba(208,59,8,0.16) inset'
+              : '0 16px 38px -30px rgba(208,59,8,0.42), 0 0 0 1px rgba(208,59,8,0.10) inset'
+            : 'none',
+          backdropFilter: 'blur(14px)',
+          WebkitBackdropFilter: 'blur(14px)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: isMobile ? 8 : 9,
+          minWidth: 0,
+        }}
+      >
+        <TechLogo tech={tech} tw={tw} size={isMobile ? 30 : 32} />
+        <span style={{
+          minWidth: 0,
+          fontFamily: '"Space Grotesk", sans-serif',
+          fontSize: isMobile ? 13.5 : 14.5,
+          fontWeight: 750,
+          lineHeight: 1.1,
+          color: c.fg,
+        }}>{tech.name}</span>
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
@@ -659,13 +740,14 @@ function TechCard({ tech, tw, selected, onSelect }) {
 }
 
 function StackCarousel({ tw, selectedTech, onSelect }) {
-  const { isMobile } = useViewport();
+  const { isMobile, isTablet } = useViewport();
   const c = colors(tw.dark, tw.accent);
+  const compact = isMobile || isTablet;
 
   return (
     <div data-rj-reveal="left" style={{
       position: 'relative',
-      padding: isMobile ? '22px 0' : '28px 0',
+      padding: compact ? '18px 0' : '28px 0',
       borderRadius: 18,
       border: `1px solid ${c.strongBorder}`,
       background: tw.dark
@@ -678,7 +760,7 @@ function StackCarousel({ tw, selectedTech, onSelect }) {
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: 16,
-        padding: isMobile ? '0 18px 20px' : '0 24px 24px',
+        padding: compact ? '0 18px 16px' : '0 24px 24px',
       }}>
         <div>
           <div style={{
@@ -693,13 +775,13 @@ function StackCarousel({ tw, selectedTech, onSelect }) {
           <div style={{
             fontFamily: '"Space Grotesk", sans-serif',
             color: c.fg,
-            fontSize: isMobile ? 22 : 27,
+            fontSize: isMobile ? 22 : compact ? 24 : 27,
             fontWeight: 800,
             lineHeight: 1.1,
           }}>All layers visible.</div>
         </div>
         <div style={{
-          display: isMobile ? 'none' : 'block',
+          display: compact ? 'none' : 'block',
           fontFamily: '"JetBrains Mono", monospace',
           color: c.muted,
           fontSize: 10,
@@ -714,9 +796,11 @@ function StackCarousel({ tw, selectedTech, onSelect }) {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(0, 1fr))',
-        gap: isMobile ? 12 : 14,
-        padding: isMobile ? '0 18px' : '0 24px',
+        gridTemplateColumns: compact
+          ? `repeat(auto-fit, minmax(${isMobile ? 138 : 150}px, 1fr))`
+          : 'repeat(2, minmax(0, 1fr))',
+        gap: compact ? 8 : 14,
+        padding: compact ? '0 18px' : '0 24px',
       }}>
         {TECHNOLOGIES.map((tech) => (
           <TechCard
@@ -725,12 +809,13 @@ function StackCarousel({ tw, selectedTech, onSelect }) {
             tw={tw}
             selected={tech.name === selectedTech.name}
             onSelect={() => onSelect(tech)}
+            compact={compact}
           />
         ))}
       </div>
 
       <div style={{
-        margin: isMobile ? '20px 18px 0' : '24px 24px 0',
+        margin: compact ? '16px 18px 0' : '24px 24px 0',
         height: 2,
         borderRadius: 99,
         background: `linear-gradient(90deg, transparent, ${c.accent}, ${c.teal}, transparent)`,
@@ -1078,7 +1163,7 @@ function DocumentIcon({ type, tw }) {
   const label = type === 'plan' ? 'PLAN' : type === 'realization' ? 'REAL' : 'REFL';
 
   return (
-    <svg width="76" height="76" viewBox="0 0 76 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <svg width="76" height="76" viewBox="0 0 76 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ position: 'relative', zIndex: 2 }}>
       <rect x="13" y="8" width="42" height="56" rx="7" stroke={c.muted} strokeWidth="2" />
       <path d="M55 21H42a4 4 0 0 1-4-4V8" stroke={c.muted} strokeWidth="2" />
       <path d="M25 30h22M25 38h22M25 46h14" stroke={secondary} strokeWidth="2.4" strokeLinecap="round" />
@@ -1113,7 +1198,9 @@ function DocumentGlassCard({ doc, tw }) {
         '--r': doc.rotate,
         '--docText': c.fg,
         '--docBorder': tw.dark ? 'rgba(248,252,253,0.14)' : 'rgba(31,34,36,0.13)',
+        '--docBase': tw.dark ? 'rgba(39,44,45,0.72)' : 'rgba(255,255,255,0.72)',
         '--docGlow': tw.dark ? 'rgba(248,252,253,0.16)' : 'rgba(255,255,255,0.72)',
+        '--docSheen': tw.dark ? 'rgba(248,252,253,0.10)' : 'rgba(255,255,255,0.55)',
         '--docFooter': tw.dark ? 'rgba(248,252,253,0.065)' : 'rgba(31,34,36,0.045)',
         '--docAccent': c.accent,
         '--docAccentGlow': tw.dark ? 'rgba(208,59,8,0.16)' : 'rgba(208,59,8,0.12)',
@@ -1122,6 +1209,8 @@ function DocumentGlassCard({ doc, tw }) {
     >
       <DocumentIcon type={doc.icon} tw={tw} />
       <div style={{
+        position: 'relative',
+        zIndex: 2,
         fontFamily: '"JetBrains Mono", monospace',
         color: c.muted,
         fontSize: 10.5,
